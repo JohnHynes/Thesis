@@ -3,20 +3,26 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-class Ray {
-    public:
-    // Constructors
-    Ray() = default;
-    constexpr Ray(Ray const&) = default;
-    constexpr Ray(Ray &&) = default;
-    constexpr Ray& operator=(Ray const&) = default;
-    constexpr Ray& operator=(Ray &&) = default;
-
-    Ray (const glm::vec3& neworigin, const glm::vec3& newdir, const glm::vec3& newcolor)
-    : origin(neworigin), dir(newdir), color(newcolor) {}
-
-    // Members
+class ray
+{
+public:
     glm::vec3 origin;
     glm::vec3 dir;
-    glm::vec3 color;
+
+public:
+    // Constructors
+    ray() = default;
+    constexpr ray(ray const &) = default;
+    constexpr ray(ray &&) = default;
+    constexpr ray &operator=(ray const &) = default;
+    constexpr ray &operator=(ray &&) = default;
+
+    ray(const glm::vec3 &neworigin, const glm::vec3 &newdir)
+        : origin(neworigin), dir(newdir) {}
+
+    // Member Functions
+    glm::vec3 at(float t) const
+    {
+        return origin + t * dir;
+    }
 };
