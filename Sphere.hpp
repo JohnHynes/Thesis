@@ -7,7 +7,7 @@ class sphere : public hittable
 {
 public:
     glm::vec3 center;
-    float radius;
+    double radius;
 
 public:
     // Constructors
@@ -17,22 +17,22 @@ public:
     constexpr sphere &operator=(sphere const &) = default;
     constexpr sphere &operator=(sphere &&) = default;
 
-    sphere(const glm::vec3& newcenter, float newradius) : center(newcenter), radius(newradius) {}
+    sphere(const glm::vec3& newcenter, double newradius) : center(newcenter), radius(newradius) {}
 
     // Member Functions
-    bool hit(const ray &r, float tmin, float tmax, hit_record &hitrec) const
+    bool hit(const ray &r, double tmin, double tmax, hit_record &hitrec) const
     {
         glm::vec3 oc = glm::vec3(0.0f, 0.0f, 0.0f) - center;
-        float a = glm::dot(r.dir, r.dir);
-        float b = glm::dot(oc, r.dir);
-        float c = glm::dot(oc, oc) - radius * radius;
-        float discriminant = b * b - a * c;
+        double a = glm::dot(r.dir, r.dir);
+        double b = glm::dot(oc, r.dir);
+        double c = glm::dot(oc, oc) - radius * radius;
+        double discriminant = b * b - a * c;
 
         if (discriminant > 0)
         {
-            float root = sqrt(discriminant);
+            double root = sqrt(discriminant);
 
-            float t = (-b - root) / a;
+            double t = (-b - root) / a;
             if (tmin < t && t < tmax)
             {
                 hitrec.t = t;

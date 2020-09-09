@@ -14,15 +14,15 @@ private:
 public:
   // Constructors
   camera () {
-      float aspect_ratio = 16.0/ 10.0;
-      float viewport_height = 2.0;
-      float viewport_width = aspect_ratio * viewport_height;
-      float focal_length = 1.0;
+      double aspect_ratio = 16.0/ 10.0;
+      double viewport_height = 2.0;
+      double viewport_width = aspect_ratio * viewport_height;
+      double focal_length = 1.0;
 
-      origin = glm::vec3(0.0f, 0.0f, 0.0f);
-      horizontal = glm::vec3(viewport_width, 0.0f, 0.0f);
-      vertical = glm::vec3(0.0f, viewport_height, 0.0f);
-      lower_left_corner = origin - horizontal / 2.0f - vertical / 2.0f - glm::vec3(0.0f, 0.0f, focal_length);
+      origin = glm::vec3(0.0, 0.0, 0.0);
+      horizontal = glm::vec3(viewport_width, 0.0, 0.0);
+      vertical = glm::vec3(0.0, viewport_height, 0.0);
+      lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - glm::vec3(0.0, 0.0, focal_length);
   }
 
   camera (camera const &) = default;
@@ -31,7 +31,7 @@ public:
   constexpr camera &operator= (camera &&) = default;
 
   // Member Functions
-  ray get_ray(float u, float v) const
+  ray get_ray(double u, double v) const
   {
       return ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
   }
