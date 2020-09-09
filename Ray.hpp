@@ -2,6 +2,8 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+
+#include "types.hpp"
 #include "Vec3.hpp"
 
 class ray
@@ -22,7 +24,7 @@ public:
         : origin(neworigin), dir(newdir) {}
 
     // Member Functions
-    glm::vec3 at(double t) const
+    glm::vec3 at(precision t) const
     {
         return origin + t * dir;
     }

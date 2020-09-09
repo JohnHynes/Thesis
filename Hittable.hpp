@@ -1,12 +1,13 @@
 #pragma once
 
+#include "types.hpp"
 #include "Ray.hpp"
 
 struct hit_record
 {
     glm::vec3 point;
     glm::vec3 normal;
-    double t;
+    precision t;
     bool front_face;
 
     inline void set_face_normal(const ray &r, const glm::vec3 &outward_normal)
@@ -26,5 +27,5 @@ struct hit_record
 class hittable
 {
 public:
-    virtual bool hit(const ray &r, double tmin, double tmax, hit_record &hitrec) const = 0;
+    virtual bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const = 0;
 };

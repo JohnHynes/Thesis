@@ -1,5 +1,5 @@
 CC = g++
-MAINCFLAGS = -O3 -march=native -isystem glm -Wall -Wextra
+MAINCFLAGS = -O3 -march=native -fopenmp -isystem glm -Wall -Wextra
 
 .PHONY: all
 

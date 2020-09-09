@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Util.hpp"
 #include <glm/vec3.hpp>
+
+#include "types.hpp"
+#include "Util.hpp"
 
 class camera
 {
@@ -14,10 +16,10 @@ private:
 public:
   // Constructors
   camera () {
-      double aspect_ratio = 16.0/ 10.0;
-      double viewport_height = 2.0;
-      double viewport_width = aspect_ratio * viewport_height;
-      double focal_length = 1.0;
+      precision aspect_ratio = 16.0/ 10.0;
+      precision viewport_height = 2.0;
+      precision viewport_width = aspect_ratio * viewport_height;
+      precision focal_length = 1.0;
 
       origin = glm::vec3(0.0, 0.0, 0.0);
       horizontal = glm::vec3(viewport_width, 0.0, 0.0);
@@ -31,7 +33,7 @@ public:
   constexpr camera &operator= (camera &&) = default;
 
   // Member Functions
-  ray get_ray(double u, double v) const
+  ray get_ray(precision u, precision v) const
   {
       return ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
   }
