@@ -1,36 +1,45 @@
 #include <iostream>
 #include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
 
 #include "Camera.hpp"
 #include "Ray.hpp"
 #include "Util.hpp"
 #include "Sphere.hpp"
 #include "HittableList.hpp"
+#include "Vec3.hpp"
 
-constexpr glm::vec3 origin(0.0f, 0.0f, 0.0f);
+constexpr glm::vec3 origin(0.0, 0.0, 0.0);
 
-glm::vec3 ray_color(const ray& r, const hittable_list& world)
+glm::vec3 ray_color(const ray &r, const hittable_list &world, int depth)
 {
-    hit_record hitrec;
-    if (world.hit(r, 0, 100, hitrec))
+    if (depth <= 0)
     {
-        return 0.5f * (hitrec.normal + glm::vec3(1, 1, 1));
+        return glm::vec3(0.0, 0.0, 0.0);
     }
-    return blend_color(r);
+
+    hit_record rec;
+    if (world.hit(r, 0.00001, infinity, rec))
+    {
+        glm::vec3 target = rec.point + rec.normal + random_unit_vector();
+        return 0.5 * ray_color(ray(rec.point, target - rec.point), world, depth - 1);
+    }
+
+    auto t = 0.5 * (glm::normalize(r.dir).y + 1.0);
+    return (1.0 - t) * glm::vec3(1.0, 1.0, 1.0) + t * glm::vec3(0.5, 0.7, 1.0);
 }
 
 int main()
 {
-    const glm::vec3 origin(0.0f, 0.0f, 0.0f);
+    const glm::vec3 origin(0.0, 0.0, 0.0);
 
     // Image
     // 1920x1080
     // 3840x2160
     constexpr double aspect_ratio = 16.0 / 10.0;
-    constexpr int image_width = 3840;
+    constexpr int image_width = 720;
     constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
-    constexpr int samples_per_pixel = 100;
+    constexpr int samples_per_pixel = 20;
+    constexpr int max_depth = 20;
 
     // World
     hittable_list world;
@@ -47,15 +56,16 @@ int main()
 
     for (int j = image_height - 1; j >= 0; --j)
     {
+
         for (int i = 0; i < image_width; ++i)
         {
-            glm::vec3 pixel_color(0.0f, 0.0f, 0.0f);
+            glm::vec3 pixel_color(0.0, 0.0, 0.0);
             for (int s = 0; s < samples_per_pixel; ++s)
             {
-                float u = (i + random_float()) / (image_width - 1);
-                float v = (j + random_float()) / (image_height - 1);
+                double u = (i + random_double()) / (image_width - 1);
+                double v = (j + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
