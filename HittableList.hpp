@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Hittable.hpp"
-
 #include <memory>
 #include <vector>
+
+#include "types.hpp"
+#include "Hittable.hpp"
 
 class hittable_list : public hittable
 {
@@ -25,11 +26,11 @@ public:
     void add(std::shared_ptr<hittable> object) { objects.push_back(object); }
 
     // Member Functions
-    bool hit(const ray &r, float tmin, float tmax, hit_record &hitrec) const
+    bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const
     {
         hit_record temp_hitrec;
         bool has_hit = false;
-        float closest_seen = tmax;
+        precision closest_seen = tmax;
 
         for (const auto &object : objects)
         {

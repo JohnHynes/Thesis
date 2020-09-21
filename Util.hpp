@@ -3,42 +3,64 @@
 #include <iostream>
 #include <random>
 
-#include "Ray.hpp"
+#include "types.hpp"
+#include "constants.hpp"
 
-// Constants
-constexpr float infinity = std::numeric_limits<float>::infinity();
-constexpr float pi = 3.14159265358979323846264338327950;
+#include "Ray.hpp"
+#include "Vec3.hpp"
+#include "Random.hpp"
+
+static random_gen rng;
 
 // Utility Functions
-inline float degrees_to_radians (float degrees) {
-    return degrees * pi / 180.0f;
-}
 
-inline float random_float () {
-    static std::uniform_real_distribution<float> distribution(0.0, 1.0);
-    static std::mt19937 generator;
-    return distribution(generator);
-}
-
-inline double clamp (float x, float min, float max)
+inline precision degrees_to_radians(precision degrees)
 {
-    if (x < min) return min;
-    if (x > max) return max;
+    return degrees * pi / 180.0;
+}
+
+inline precision clamp(precision x, precision min, precision max)
+{
+    if (x < min)
+        return min;
+    if (x > max)
+        return max;
     return x;
 }
 
-// Color Functions
-inline void write_color (std::ostream& out, const glm::vec3 &v, int samples_per_pixel)
+glm::vec3 random_unit_vector()
 {
-    float scale = 1.0f / samples_per_pixel;
-
-    out << static_cast<int>(256 * clamp(v.r * scale, 0, 0.99999)) << ' '
-        << static_cast<int>(256 * clamp(v.g * scale, 0, 0.99999)) << ' '
-        << static_cast<int>(256 * clamp(v.b * scale, 0, 0.99999)) << '\n';
+    precision a = rng.random_angle();
+    precision z = rng.random_unit();
+    precision r = sqrt(1 - z * z);
+    return glm::vec3(r * cos(a), r * sin(a), z);
 }
 
-inline glm::vec3 blend_color(const ray &r)
+glm::vec3 random_in_hemisphere(const glm::vec3 &normal)
 {
-    float t = 0.5f * (glm::normalize(r.dir).y + 1.0f);
-    return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5, 0.7, 1.0);
+    glm::vec3 in_unit_sphere = random_unit_vector();
+    if (glm::dot(in_unit_sphere, normal) > 0.0)
+        return in_unit_sphere;
+    else
+        return -in_unit_sphere;
+}
+
+glm::vec3 reflect(const glm::vec3 &v, const glm::vec3 &n)
+{
+    return v - 2 * glm::dot(v, n) * n;
+}
+
+// Color Functions
+
+inline void write_color(std::ostream &out, const color &c, int samples_per_pixel)
+{
+    precision scale = 1.0 / samples_per_pixel;
+
+    precision r = sqrt(c.r * scale);
+    precision g = sqrt(c.g * scale);
+    precision b = sqrt(c.b * scale);
+
+    out << static_cast<int>(256 * clamp(r, 0, 0.999999)) << ' '
+        << static_cast<int>(256 * clamp(g, 0, 0.999999)) << ' '
+        << static_cast<int>(256 * clamp(b, 0, 0.999999)) << '\n';
 }
