@@ -1,12 +1,17 @@
 #pragma once
 
+#include <memory>
+
 #include "types.hpp"
 #include "Ray.hpp"
 
+class material;
+
 struct hit_record
 {
-    glm::vec3 point;
+    point3 point;
     glm::vec3 normal;
+    std::shared_ptr<material> mat_ptr;
     precision t;
     bool front_face;
 

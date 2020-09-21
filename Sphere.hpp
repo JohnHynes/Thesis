@@ -8,16 +8,17 @@ class sphere : public hittable
 public:
     glm::vec3 center;
     precision radius;
+    std::shared_ptr<material> mat_ptr;
 
 public:
     // Constructors
     sphere() = default;
-    constexpr sphere(sphere const &) = default;
-    constexpr sphere(sphere &&) = default;
-    constexpr sphere &operator=(sphere const &) = default;
-    constexpr sphere &operator=(sphere &&) = default;
+    sphere(sphere const &) = default;
+    sphere(sphere &&) = default;
+    sphere &operator=(sphere const &) = default;
+    sphere &operator=(sphere &&) = default;
 
-    sphere(const glm::vec3& newcenter, precision newradius) : center(newcenter), radius(newradius) {}
+    sphere(const glm::vec3& c, precision r, std::shared_ptr<material> m) : center(c), radius(r), mat_ptr(m) {}
 
     // Member Functions
     bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const
@@ -40,6 +41,7 @@ public:
                 hitrec.normal = (hitrec.point - center) / radius;
                 glm::vec3 outward_normal = (hitrec.point - center) / radius;
                 hitrec.set_face_normal(r, outward_normal);
+                hitrec.mat_ptr = mat_ptr;
                 return true;
             }
 
@@ -51,6 +53,7 @@ public:
                 hitrec.normal = (hitrec.point - center) / radius;
                 glm::vec3 outward_normal = (hitrec.point - center) / radius;
                 hitrec.set_face_normal(r, outward_normal);
+                hitrec.mat_ptr = mat_ptr;
                 return true;
             }
         }

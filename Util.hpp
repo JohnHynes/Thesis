@@ -45,15 +45,20 @@ glm::vec3 random_in_hemisphere(const glm::vec3 &normal)
         return -in_unit_sphere;
 }
 
+glm::vec3 reflect(const glm::vec3 &v, const glm::vec3 &n)
+{
+    return v - 2 * glm::dot(v, n) * n;
+}
+
 // Color Functions
 
-inline void write_color(std::ostream &out, const glm::vec3 &color, int samples_per_pixel)
+inline void write_color(std::ostream &out, const color &c, int samples_per_pixel)
 {
     precision scale = 1.0 / samples_per_pixel;
 
-    precision r = sqrt(color.r * scale);
-    precision g = sqrt(color.g * scale);
-    precision b = sqrt(color.b * scale);
+    precision r = sqrt(c.r * scale);
+    precision g = sqrt(c.g * scale);
+    precision b = sqrt(c.b * scale);
 
     out << static_cast<int>(256 * clamp(r, 0, 0.999999)) << ' '
         << static_cast<int>(256 * clamp(g, 0, 0.999999)) << ' '
