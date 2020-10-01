@@ -17,8 +17,7 @@ struct hit_record
 
     inline void set_face_normal(const ray &r, const glm::vec3 &outward_normal)
     {
-        front_face = glm::dot(r.dir, outward_normal) < 0;
-        if (front_face)
+        if (glm::dot(r.dir, outward_normal) < 0)
         {
             normal = outward_normal;
         }

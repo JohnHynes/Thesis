@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <cmath>
 
 #include "types.hpp"
 #include "constants.hpp"

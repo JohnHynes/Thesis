@@ -34,7 +34,7 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
     }
 
     auto t = 0.5 * (glm::normalize(r.dir).y + 1.0);
-    return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+    return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
 int main()
@@ -43,7 +43,7 @@ int main()
     // 1920x1080
     // 3840x2160
     constexpr double aspect_ratio = 16.0 / 10.0;
-    constexpr int image_width = 1920;
+    constexpr int image_width = 720;
     constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
     constexpr int samples_per_pixel = 100;
     constexpr int max_depth = 50;
@@ -52,12 +52,14 @@ int main()
     hittable_list world;
 
     auto material_ground = std::make_shared<lambertian>(color(0.2, 0.8, 0.2));
-    auto material_matte = std::make_shared<lambertian>(color(0.2, 0.5, 0.8));
-    auto material_metal = std::make_shared<metal>(color(0.6, 0.6, 0.6));
+    auto material_matte = std::make_shared<lambertian>(color(0.2, 0.4, 0.8));
+    auto material_metal = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.15);
+    auto material_metal2 = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.15);
 
     world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, material_ground));
     world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5, material_matte));
     world.add(std::make_shared<sphere>(point3(-1, 0, -1), 0.5, material_metal));
+    world.add(std::make_shared<sphere>(point3(1, 0, -1), 0.5, material_metal2));
 
     // Camera
     camera cam;
