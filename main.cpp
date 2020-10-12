@@ -50,19 +50,24 @@ int main()
 
     // World
     hittable_list world;
-
-    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.8, 0.2));
-    auto material_matte = std::make_shared<lambertian>(color(0.2, 0.4, 0.8));
-    auto material_metal = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.15);
-    auto material_metal2 = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.15);
+ 
+    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.6, 0.2));
+    auto material_glass = std::make_shared<dielectric>(1.5);
+    auto material_metal  = std::make_shared<metal>(color(0.3, 0.6, 0.8), 0.0);
 
     world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, material_ground));
-    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5, material_matte));
-    world.add(std::make_shared<sphere>(point3(-1, 0, -1), 0.5, material_metal));
-    world.add(std::make_shared<sphere>(point3(1, 0, -1), 0.5, material_metal2));
+    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1.4), 0.3, material_ground));
+    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1), -0.5, material_glass));
+    world.add(std::make_shared<sphere>(point3(0.6, 0, -1), 0.5, material_metal));
 
     // Camera
-    camera cam;
+    point3 lookfrom(0,0,0.5);
+    point3 lookat(0,0,-1);
+    glm::vec3 upv(0,1,0);
+    precision aperture = 0.01;
+    precision dist_to_focus = glm::length(lookfrom - lookat);
+
+    camera cam(lookfrom, lookat, upv, 90, aspect_ratio, aperture, dist_to_focus);
 
     // Render
     std::cout << "P3\n";
@@ -80,9 +85,9 @@ int main()
             color pixel_color(0.0, 0.0, 0.0);
             for (int s = 0; s < samples_per_pixel; ++s)
             {
-                precision u = (i + rng.random_unit()) / (image_width - 1);
-                precision v = (j + rng.random_unit()) / (image_height - 1);
-                ray r = cam.get_ray(u, v);
+                precision a = (i + rng.random_unit()) / (image_width - 1);
+                precision b = (j + rng.random_unit()) / (image_height - 1);
+                ray r = cam.get_ray(a, b);
                 pixel_color += ray_color(r, world, max_depth);
             }
             image(j, i) = pixel_color;
