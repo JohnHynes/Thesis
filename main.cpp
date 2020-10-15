@@ -10,7 +10,6 @@
 #include "Util.hpp"
 #include "Sphere.hpp"
 #include "HittableList.hpp"
-#include "Vec3.hpp"
 #include "Material.hpp"
 
 color ray_color(const ray &r, const hittable_list &world, int depth)
@@ -33,7 +32,7 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
         }
     }
 
-    auto t = 0.5 * (glm::normalize(r.dir).y + 1.0);
+    precision t = 0.5 * (glm::normalize(r.dir).y + 1.0);
     return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
@@ -43,31 +42,30 @@ int main()
     // 1920x1080
     // 3840x2160
     constexpr double aspect_ratio = 16.0 / 10.0;
-    constexpr int image_width = 720;
+    constexpr int image_width = 400;
     constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
     constexpr int samples_per_pixel = 100;
-    constexpr int max_depth = 50;
+    constexpr int max_depth = 20;
 
     // World
     hittable_list world;
  
-    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.6, 0.2));
+    auto material_ground = std::make_shared<metal>(color(0.2, 0.6, 0.2), 0.80);
     auto material_glass = std::make_shared<dielectric>(1.5);
-    auto material_metal  = std::make_shared<metal>(color(0.3, 0.6, 0.8), 0.0);
+    auto material_metal  = std::make_shared<metal>(color(0.6, 0.6, 0.8), 0.75);
 
-    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, material_ground));
-    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1.4), 0.3, material_ground));
-    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1), -0.5, material_glass));
-    world.add(std::make_shared<sphere>(point3(0.6, 0, -1), 0.5, material_metal));
-
+    world.add(std::make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(std::make_shared<sphere>(point3( 1.1,    0.0, -1.0),   0.5, material_glass));
+    world.add(std::make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_metal));
+    world.add(std::make_shared<sphere>(point3(-1.1,    0.0, -1.0),   0.5, material_glass));
     // Camera
-    point3 lookfrom(0,0,0.5);
+    point3 lookfrom(0,0,1);
     point3 lookat(0,0,-1);
     glm::vec3 upv(0,1,0);
     precision aperture = 0.01;
     precision dist_to_focus = glm::length(lookfrom - lookat);
 
-    camera cam(lookfrom, lookat, upv, 90, aspect_ratio, aperture, dist_to_focus);
+    camera cam(lookfrom, lookat, upv, 70, aspect_ratio, aperture, dist_to_focus);
 
     // Render
     std::cout << "P3\n";
@@ -77,7 +75,6 @@ int main()
     auto image = make_image<color>(image_width, image_height);
 
 // Rendering image
-#pragma omp parallel for collapse(2)
     for (int j = 0; j < image_height; ++j)
     {
         for (int i = 0; i < image_width; ++i)

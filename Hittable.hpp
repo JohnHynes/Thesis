@@ -10,12 +10,12 @@ class material;
 struct hit_record
 {
     point3 point;
-    glm::vec3 normal;
+    vec3 normal;
     std::shared_ptr<material> mat_ptr;
     precision t;
     bool front_face;
 
-    inline void set_face_normal(const ray &r, const glm::vec3 &outward_normal)
+    inline void set_face_normal(const ray &r, const vec3 &outward_normal)
     {
         if (glm::dot(r.dir, outward_normal) < 0)
         {

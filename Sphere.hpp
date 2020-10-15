@@ -6,7 +6,7 @@
 class sphere : public hittable
 {
 public:
-  glm::vec3 center;
+  vec3 center;
   precision radius;
   std::shared_ptr<material> mat_ptr;
 
@@ -20,7 +20,7 @@ public:
   sphere &
   operator= (sphere &&) = default;
 
-  sphere (const glm::vec3 &c, precision r, std::shared_ptr<material> m)
+  sphere (const vec3 &c, precision r, std::shared_ptr<material> m)
     : center (c), radius (r), mat_ptr (m)
   {
   }
@@ -29,7 +29,7 @@ public:
   bool
   hit (const ray &r, precision tmin, precision tmax, hit_record &hitrec) const
   {
-    glm::vec3 oc = r.origin - center;
+    vec3 oc = r.origin - center;
     precision a = glm::dot (r.dir, r.dir);
     precision half_b = glm::dot (oc, r.dir);
     precision c = glm::dot (oc, oc) - radius * radius;
