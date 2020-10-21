@@ -23,7 +23,7 @@ public:
         : origin(neworigin), dir(newdir) {}
 
     // Member Functions
-    point3 at(precision t) const
+    point3 at(num t) const
     {
         return origin + t * dir;
     }

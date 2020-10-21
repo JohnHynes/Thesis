@@ -26,11 +26,11 @@ public:
     void add(std::shared_ptr<hittable> object) { objects.push_back(object); }
 
     // Member Functions
-    bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const
+    bool hit(const ray &r, num tmin, num tmax, hit_record &hitrec) const
     {
         hit_record temp_hitrec;
         bool has_hit = false;
-        precision closest_seen = tmax;
+        num closest_seen = tmax;
 
         for (const auto &object : objects)
         {

@@ -12,7 +12,7 @@ struct hit_record
     point3 point;
     vec3 normal;
     std::shared_ptr<material> mat_ptr;
-    precision t;
+    num t;
     bool front_face;
 
     inline void set_face_normal(const ray &r, const vec3 &outward_normal)
@@ -31,5 +31,5 @@ struct hit_record
 class hittable
 {
 public:
-    virtual bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const = 0;
+    virtual bool hit(const ray &r, num tmin, num tmax, hit_record &hitrec) const = 0;
 };

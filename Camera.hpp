@@ -14,15 +14,15 @@ private:
   vec3 horizontal;
   vec3 vertical;
   vec3 u, v, w;
-  precision lens_radius;
+  num lens_radius;
 
 public:
   // Constructors
-  camera (const point3& lookfrom, const point3& lookat, const vec3 up, precision fov, precision aspect_ratio, precision aperture, precision focus_dist) {
-    precision theta = degrees_to_radians(fov);
-    precision h = tan(theta / 2);
-    precision viewport_height = 2.0 * h;
-    precision viewport_width = aspect_ratio * viewport_height;
+  camera (const point3& lookfrom, const point3& lookat, const vec3 up, num fov, num aspect_ratio, num aperture, num focus_dist) {
+    num theta = degrees_to_radians(fov);
+    num h = tan(theta / 2);
+    num viewport_height = 2.0 * h;
+    num viewport_width = aspect_ratio * viewport_height;
 
     w = glm::normalize (lookfrom - lookat);
     u = glm::normalize (glm::cross(up,w));
@@ -41,7 +41,7 @@ public:
   camera &operator= (camera &&) = default;
 
   // Member Functions
-  ray get_ray(precision a, precision b)
+  ray get_ray(num a, num b)
   {
     vec3 rv = lens_radius * random_in_unit_disk();
     vec3 offset = u * rv.x + v * rv.y;

@@ -32,7 +32,7 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
         }
     }
 
-    precision t = 0.5 * (glm::normalize(r.dir).y + 1.0);
+    num t = 0.5 * (glm::normalize(r.dir).y + 1.0);
     return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
@@ -50,20 +50,21 @@ int main()
     // World
     hittable_list world;
  
-    auto material_ground = std::make_shared<metal>(color(0.2, 0.6, 0.2), 0.80);
+    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.6, 0.2));
+    auto material_red = std::make_shared<lambertian>(color(0.7, 0.2, 0.2));
     auto material_glass = std::make_shared<dielectric>(1.5);
     auto material_metal  = std::make_shared<metal>(color(0.6, 0.6, 0.8), 0.75);
 
     world.add(std::make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(std::make_shared<sphere>(point3( 1.1,    0.0, -1.0),   0.5, material_glass));
-    world.add(std::make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_metal));
+    world.add(std::make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_red));
     world.add(std::make_shared<sphere>(point3(-1.1,    0.0, -1.0),   0.5, material_glass));
     // Camera
     point3 lookfrom(0,0,1);
     point3 lookat(0,0,-1);
     glm::vec3 upv(0,1,0);
-    precision aperture = 0.01;
-    precision dist_to_focus = glm::length(lookfrom - lookat);
+    num aperture = 0.01;
+    num dist_to_focus = glm::length(lookfrom - lookat);
 
     camera cam(lookfrom, lookat, upv, 70, aspect_ratio, aperture, dist_to_focus);
 
@@ -82,8 +83,8 @@ int main()
             color pixel_color(0.0, 0.0, 0.0);
             for (int s = 0; s < samples_per_pixel; ++s)
             {
-                precision a = (i + rng.random_unit()) / (image_width - 1);
-                precision b = (j + rng.random_unit()) / (image_height - 1);
+                num a = (i + rng.random_unit()) / (image_width - 1);
+                num b = (j + rng.random_unit()) / (image_height - 1);
                 ray r = cam.get_ray(a, b);
                 pixel_color += ray_color(r, world, max_depth);
             }
