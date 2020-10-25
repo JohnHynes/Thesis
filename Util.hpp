@@ -21,31 +21,12 @@ degrees_to_radians (num degrees)
   return degrees * pi / 180.0;
 }
 
-vec3
-random_unit_vector ()
-{
-  num a = rng.random_angle ();
-  num z = rng.random_unit ();
-  num r = sqrt (1 - z * z);
-  return vec3 (r * cos (a), r * sin (a), z);
-}
-
-vec3
-random_in_hemisphere (const vec3 &normal)
-{
-  vec3 in_unit_sphere = random_unit_vector ();
-  if (glm::dot (in_unit_sphere, normal) > 0.0)
-    return in_unit_sphere;
-  else
-    return -in_unit_sphere;
-}
-
 // Color Functions
 
 inline void
 write_color (std::ostream &out, const color &c, int samples_per_pixel)
 {
-  num scale = 1.0 / samples_per_pixel;
+  num scale = num(1) / samples_per_pixel;
 
   num r = sqrt (c.r * scale);
   num g = sqrt (c.g * scale);

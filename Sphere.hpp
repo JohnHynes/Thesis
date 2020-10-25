@@ -29,7 +29,7 @@ public:
   bool
   hit (const ray &r, num tmin, num tmax, hit_record &hitrec) const
   {
-    vec3 oc = r.origin - center;
+    vec3 oc = r.origin() - center;
     num a = glm::dot (r.dir, r.dir);
     num half_b = glm::dot (oc, r.dir);
     num c = glm::dot (oc, oc) - radius * radius;

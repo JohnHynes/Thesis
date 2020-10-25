@@ -8,7 +8,7 @@
 class ray
 {
 public:
-    point3 origin;
+    point3 orig;
     vec3 dir;
 
 public:
@@ -20,11 +20,14 @@ public:
     constexpr ray &operator=(ray &&) = default;
 
     ray(const point3 &neworigin, const vec3 &newdir)
-        : origin(neworigin), dir(newdir) {}
+        : orig(neworigin), dir(newdir) {}
+
+    point3 origin() const  { return orig; }
+    vec3 direction() const { return dir; }
 
     // Member Functions
     point3 at(num t) const
     {
-        return origin + t * dir;
+        return orig + t * dir;
     }
 };
