@@ -56,12 +56,12 @@ class metal : public material {
 
 class dielectric : public material {
     public:
-        dielectric(num index_of_refraction) : ir(index_of_refraction) {}
+        dielectric(const color& a, num index_of_refraction) : albedo(a), ir(index_of_refraction) {}
 
         virtual bool scatter(
             const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
         ) const override {
-            attenuation = color(1, 1, 1);
+            attenuation = albedo;
             num refraction_ratio = rec.front_face ? (CONST(1) / ir) : ir;
 
             vec3 unit_direction = glm::normalize(r_in.direction());
@@ -81,6 +81,7 @@ class dielectric : public material {
         }
 
     public:
+        color albedo;
         num ir; // Index of Refraction
 
     private:

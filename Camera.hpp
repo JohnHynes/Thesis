@@ -16,15 +16,21 @@ private:
     num lens_radius;
 
 public:
-    camera(
-        point3 lookfrom,
-        point3 lookat,
-        vec3   vup,
-        num vfov, // vertical field-of-view in degrees
-        num aspect_ratio,
-        num aperture,
-        num focus_dist
-    ) {
+    camera(const point3& lookfrom, const point3& lookat, const vec3& vup, const num& vfov,
+        const num& aspect_ratio, const num& aperture, const num& focus_dist)
+    {
+        set(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, focus_dist);
+    }
+
+    camera (camera const &) = default;
+    camera (camera &&) = default;
+    camera &operator= (camera const &) = default;
+    camera &operator= (camera &&) = default;
+
+    void
+    set(const point3& lookfrom, const point3& lookat, const vec3& vup, const num& vfov,
+        const num& aspect_ratio, const num& aperture, const num& focus_dist)
+    {
         num theta = degrees_to_radians(vfov);
         num h = tan(theta / CONST(2));
         num viewport_height = CONST(2) * h;
@@ -41,11 +47,6 @@ public:
 
         lens_radius = aperture / CONST(2);
     }
-
-    camera (camera const &) = default;
-    camera (camera &&) = default;
-    camera &operator= (camera const &) = default;
-    camera &operator= (camera &&) = default;
 
     ray get_ray(num s, num t) const {
         vec3 rd = lens_radius * random_in_unit_disk();

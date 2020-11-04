@@ -8,7 +8,7 @@ class sphere : public hittable
 public:
   vec3 center;
   num radius;
-  std::shared_ptr<material> mat_ptr;
+  material* mat_ptr;
 
 public:
   // Constructors
@@ -20,7 +20,7 @@ public:
   sphere &
   operator= (sphere &&) = default;
 
-  sphere (const vec3 &c, num r, std::shared_ptr<material> m)
+  sphere (const vec3 &c, num r, material* m)
     : center (c), radius (r), mat_ptr (m)
   {
   }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "types.hpp"
 #include "Ray.hpp"
 
@@ -11,7 +9,7 @@ struct hit_record
 {
     point3 point;
     vec3 normal;
-    std::shared_ptr<material> mat_ptr;
+    material* mat_ptr;
     num t;
     bool front_face;
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
 #include "types.hpp"
@@ -9,7 +8,7 @@
 class hittable_list : public hittable
 {
 public:
-    std::vector<std::shared_ptr<hittable>> objects;
+    std::vector<hittable*> objects;
 
 public:
     // Constructors
@@ -19,11 +18,11 @@ public:
     hittable_list &operator=(hittable_list const &) = default;
     hittable_list &operator=(hittable_list &&) = default;
 
-    hittable_list(std::shared_ptr<hittable> object) { add(object); };
+    hittable_list(hittable* object) { add(object); };
 
     // Mutators
     void clear() { objects.clear(); }
-    void add(std::shared_ptr<hittable> object) { objects.push_back(object); }
+    void add(hittable* object) { objects.push_back(object); }
 
     // Member Functions
     bool hit(const ray &r, num tmin, num tmax, hit_record &hitrec) const
