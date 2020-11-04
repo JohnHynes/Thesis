@@ -4,13 +4,12 @@
 #include <glm/vec4.hpp>
 
 #include "types.hpp"
-#include "Vec3.hpp"
 
 class ray
 {
 public:
-    point3 origin;
-    glm::vec3 dir;
+    point3 orig;
+    vec3 dir;
 
 public:
     // Constructors
@@ -20,12 +19,15 @@ public:
     constexpr ray &operator=(ray const &) = default;
     constexpr ray &operator=(ray &&) = default;
 
-    ray(const point3 &neworigin, const glm::vec3 &newdir)
-        : origin(neworigin), dir(newdir) {}
+    ray(const point3 &neworigin, const vec3 &newdir)
+        : orig(neworigin), dir(newdir) {}
+
+    point3 origin() const  { return orig; }
+    vec3 direction() const { return dir; }
 
     // Member Functions
-    point3 at(precision t) const
+    point3 at(num t) const
     {
-        return origin + t * dir;
+        return orig + t * dir;
     }
 };

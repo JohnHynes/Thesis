@@ -10,7 +10,6 @@
 #include "Util.hpp"
 #include "Sphere.hpp"
 #include "HittableList.hpp"
-#include "Vec3.hpp"
 #include "Material.hpp"
 
 color ray_color(const ray &r, const hittable_list &world, int depth)
@@ -28,12 +27,10 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
         if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
             return attenuation * ray_color(scattered, world, depth - 1);
         else
-        {
             return color(0, 0, 0);
-        }
     }
 
-    auto t = 0.5 * (glm::normalize(r.dir).y + 1.0);
+    num t = 0.5 * (glm::normalize(r.dir).y + 1.0);
     return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
@@ -43,31 +40,31 @@ int main()
     // 1920x1080
     // 3840x2160
     constexpr double aspect_ratio = 16.0 / 10.0;
-    constexpr int image_width = 720;
+    constexpr int image_width = 600;
     constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
-    constexpr int samples_per_pixel = 100;
+    constexpr int samples_per_pixel = 1000;
     constexpr int max_depth = 50;
 
     // World
     hittable_list world;
  
     auto material_ground = std::make_shared<lambertian>(color(0.2, 0.6, 0.2));
+    auto material_red = std::make_shared<lambertian>(color(0.7, 0.2, 0.2));
     auto material_glass = std::make_shared<dielectric>(1.5);
-    auto material_metal  = std::make_shared<metal>(color(0.3, 0.6, 0.8), 0.0);
+    auto material_metal  = std::make_shared<metal>(color(0.6, 0.6, 0.8), 0.75);
 
-    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, material_ground));
-    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1.4), 0.3, material_ground));
-    world.add(std::make_shared<sphere>(point3(-0.6, 0, -1), -0.5, material_glass));
-    world.add(std::make_shared<sphere>(point3(0.6, 0, -1), 0.5, material_metal));
-
+    world.add(std::make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(std::make_shared<sphere>(point3( 1.1,    0.0, -1.0),   0.5, material_glass));
+    world.add(std::make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_red));
+    world.add(std::make_shared<sphere>(point3(-1.1,    0.0, -1.0),   0.5, material_glass));
     // Camera
-    point3 lookfrom(0,0,0.5);
+    point3 lookfrom(-2,2,1);
     point3 lookat(0,0,-1);
     glm::vec3 upv(0,1,0);
-    precision aperture = 0.01;
-    precision dist_to_focus = glm::length(lookfrom - lookat);
+    num aperture = 0.01;
+    num dist_to_focus = glm::length(lookfrom - lookat);
 
-    camera cam(lookfrom, lookat, upv, 90, aspect_ratio, aperture, dist_to_focus);
+    camera cam(lookfrom, lookat, upv, 20, aspect_ratio, aperture, dist_to_focus);
 
     // Render
     std::cout << "P3\n";
@@ -76,8 +73,7 @@ int main()
 
     auto image = make_image<color>(image_width, image_height);
 
-// Rendering image
-#pragma omp parallel for collapse(2)
+    // Rendering image
     for (int j = 0; j < image_height; ++j)
     {
         for (int i = 0; i < image_width; ++i)
@@ -85,9 +81,9 @@ int main()
             color pixel_color(0.0, 0.0, 0.0);
             for (int s = 0; s < samples_per_pixel; ++s)
             {
-                precision a = (i + rng.random_unit()) / (image_width - 1);
-                precision b = (j + rng.random_unit()) / (image_height - 1);
-                ray r = cam.get_ray(a, b);
+                num u = (i + rng.random_positive_unit()) / (image_width-1);
+                num v = (j + rng.random_positive_unit()) / (image_height-1);
+                ray r = cam.get_ray(u, v);
                 pixel_color += ray_color(r, world, max_depth);
             }
             image(j, i) = pixel_color;

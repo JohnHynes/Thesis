@@ -10,14 +10,15 @@ class material;
 struct hit_record
 {
     point3 point;
-    glm::vec3 normal;
+    vec3 normal;
     std::shared_ptr<material> mat_ptr;
-    precision t;
+    num t;
     bool front_face;
 
-    inline void set_face_normal(const ray &r, const glm::vec3 &outward_normal)
+    inline void set_face_normal(const ray &r, const vec3 &outward_normal)
     {
-        if (glm::dot(r.dir, outward_normal) < 0)
+        front_face = glm::dot(r.dir, outward_normal) < 0;
+        if (front_face)
         {
             normal = outward_normal;
         }
@@ -31,5 +32,5 @@ struct hit_record
 class hittable
 {
 public:
-    virtual bool hit(const ray &r, precision tmin, precision tmax, hit_record &hitrec) const = 0;
+    virtual bool hit(const ray &r, num tmin, num tmax, hit_record &hitrec) const = 0;
 };

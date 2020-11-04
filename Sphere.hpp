@@ -6,8 +6,8 @@
 class sphere : public hittable
 {
 public:
-  glm::vec3 center;
-  precision radius;
+  vec3 center;
+  num radius;
   std::shared_ptr<material> mat_ptr;
 
 public:
@@ -20,29 +20,29 @@ public:
   sphere &
   operator= (sphere &&) = default;
 
-  sphere (const glm::vec3 &c, precision r, std::shared_ptr<material> m)
+  sphere (const vec3 &c, num r, std::shared_ptr<material> m)
     : center (c), radius (r), mat_ptr (m)
   {
   }
 
   // Member Functions
   bool
-  hit (const ray &r, precision tmin, precision tmax, hit_record &hitrec) const
+  hit (const ray &r, num tmin, num tmax, hit_record &hitrec) const
   {
-    glm::vec3 oc = r.origin - center;
-    precision a = glm::dot (r.dir, r.dir);
-    precision half_b = glm::dot (oc, r.dir);
-    precision c = glm::dot (oc, oc) - radius * radius;
-    precision discriminant = half_b * half_b - a * c;
+    vec3 oc = r.origin() - center;
+    num a = glm::dot (r.dir, r.dir);
+    num half_b = glm::dot (oc, r.dir);
+    num c = glm::dot (oc, oc) - radius * radius;
+    num discriminant = half_b * half_b - a * c;
 
     if (discriminant <= 0)
     {
       return false;
     }
 
-    precision root = sqrt (discriminant);
+    num root = sqrt (discriminant);
 
-    precision t = (-half_b - root) / a;
+    num t = (-half_b - root) / a;
     if (tmin < t && t < tmax)
     {
       hitrec.t = t;
