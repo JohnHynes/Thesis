@@ -1,5 +1,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
+#include <toml.hpp>
 
 #include "types.hpp"
 #include "constants.hpp"
@@ -11,6 +12,7 @@
 #include "Sphere.hpp"
 #include "HittableList.hpp"
 #include "Material.hpp"
+#include "TOMLLoader.hpp"
 
 color ray_color(const ray &r, const hittable_list &world, int depth)
 {
@@ -34,37 +36,28 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
     return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    string filename;
+    if (argc == 0)
+    {
+        filename = "scene.toml";
+    }
+    else
+    {
+        filename = argv[1];
+    }
+
+    const auto scene_data = toml::parse(filename);
+
     // Image
-    // 1920x1080
-    // 3840x2160
-    constexpr double aspect_ratio = 16.0 / 10.0;
-    constexpr int image_width = 600;
-    constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
-    constexpr int samples_per_pixel = 1000;
-    constexpr int max_depth = 50;
+    auto [samples_per_pixel, max_depth, image_width, image_height] = loadParams(scene_data);
 
     // World
-    hittable_list world;
- 
-    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.6, 0.2));
-    auto material_red = std::make_shared<lambertian>(color(0.7, 0.2, 0.2));
-    auto material_glass = std::make_shared<dielectric>(1.5);
-    auto material_metal  = std::make_shared<metal>(color(0.6, 0.6, 0.8), 0.75);
+    scene world = loadScene(scene_data);
 
-    world.add(std::make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(std::make_shared<sphere>(point3( 1.1,    0.0, -1.0),   0.5, material_glass));
-    world.add(std::make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_red));
-    world.add(std::make_shared<sphere>(point3(-1.1,    0.0, -1.0),   0.5, material_glass));
     // Camera
-    point3 lookfrom(-2,2,1);
-    point3 lookat(0,0,-1);
-    glm::vec3 upv(0,1,0);
-    num aperture = 0.01;
-    num dist_to_focus = glm::length(lookfrom - lookat);
-
-    camera cam(lookfrom, lookat, upv, 20, aspect_ratio, aperture, dist_to_focus);
+    camera cam = loadCamera(scene_data);
 
     // Render
     std::cout << "P3\n";
@@ -74,6 +67,7 @@ int main()
     auto image = make_image<color>(image_width, image_height);
 
     // Rendering image
+    #pragma omp parallel for collapse(2)
     for (int j = 0; j < image_height; ++j)
     {
         for (int i = 0; i < image_width; ++i)
@@ -84,7 +78,7 @@ int main()
                 num u = (i + rng.random_positive_unit()) / (image_width-1);
                 num v = (j + rng.random_positive_unit()) / (image_height-1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world, max_depth);
+                pixel_color += ray_color(r, world.objects, max_depth);
             }
             image(j, i) = pixel_color;
         }
