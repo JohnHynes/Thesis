@@ -18,9 +18,8 @@ using std::vector;
 using std::string;
 
 auto
-loadParams(const string& filename)
+loadParams(const toml::value& scene_data)
 {
-    const auto scene_data = toml::parse(filename);
     const auto raytracing_data = toml::find(scene_data, "raytracing");
 
     int samples = toml::find<int>(raytracing_data, "samples");
@@ -32,9 +31,8 @@ loadParams(const string& filename)
 }
 
 camera
-loadCamera(const string& filename)
+loadCamera(const toml::value& scene_data)
 {
-    const auto scene_data = toml::parse(filename);
     const auto camera_data = toml::find(scene_data, "camera");
 
     vector<num> lf = toml::find<vector<num>>(camera_data, "lookfrom");
@@ -58,11 +56,10 @@ loadCamera(const string& filename)
 }
 
 scene
-loadScene(const string& filename)
+loadScene(const toml::value& scene_data)
 {
     scene world;
 
-    const auto scene_data = toml::parse(filename);
     const auto& material_data = toml::find(scene_data, "materials").as_array();
 
     for (const auto& mat : material_data)
@@ -113,9 +110,7 @@ loadScene(const string& filename)
                     return nullptr;
             }
         }();
-
         world.objects.add(h);
-
     }
 
     return world;

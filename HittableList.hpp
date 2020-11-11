@@ -20,6 +20,15 @@ public:
 
     hittable_list(hittable* object) { add(object); };
 
+    // Destructor
+    ~hittable_list()
+    {
+        for (auto& p :objects)
+        {
+            delete p;
+        }
+    }
+
     // Mutators
     void clear() { objects.clear(); }
     void add(hittable* object) { objects.push_back(object); }

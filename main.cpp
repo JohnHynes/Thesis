@@ -1,5 +1,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
+#include <toml.hpp>
 
 #include "types.hpp"
 #include "constants.hpp"
@@ -35,16 +36,28 @@ color ray_color(const ray &r, const hittable_list &world, int depth)
     return glm::mix(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    string filename;
+    if (argc == 0)
+    {
+        filename = "scene.toml";
+    }
+    else
+    {
+        filename = argv[1];
+    }
+
+    const auto scene_data = toml::parse(filename);
+
     // Image
-    auto [samples_per_pixel, max_depth, image_width, image_height] = loadParams("scene.toml");
+    auto [samples_per_pixel, max_depth, image_width, image_height] = loadParams(scene_data);
 
     // World
-    scene world = loadScene("scene.toml");
+    scene world = loadScene(scene_data);
 
     // Camera
-    camera cam = loadCamera("scene.toml");
+    camera cam = loadCamera(scene_data);
 
     // Render
     std::cout << "P3\n";
