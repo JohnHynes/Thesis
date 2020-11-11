@@ -3,4 +3,4 @@
 	url = https://github.com/g-truc/glm
 [submodule "toml11"]
 	path = toml11
-	url = https://github.com/ToruNiina/toml11
+	url = https://github.com/JohnHynes/toml11
