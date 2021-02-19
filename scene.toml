@@ -1,7 +1,7 @@
 [raytracing]
-samples = 200
+samples = 1000
 depth = 20
-height = 720
+height = 1080
 
 [camera]
 lookfrom = [0.0, 0.0, 0.4]
@@ -12,7 +12,7 @@ fov = 72.0
 
 #16:9
 aspect_ratio = 1.777777778
-
+#aspect_ratio = 2.0
 
 [[materials]]
 id = "red"
