@@ -11,8 +11,6 @@
 #include "Random.hpp"
 #include "Ray.hpp"
 
-thread_local random_gen rng;
-
 // Utility Functions
 
 inline num
