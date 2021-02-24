@@ -20,11 +20,9 @@ HOST_DEVICE
 color
 trace_ray (RandomState* state, ray r, const scene* world, int depth)
 {
-
   hit_record rec;
   color attenuation;
-  color factor (1, 1, 1);
-  color result_color = factor;
+  color result_color(1, 1, 1);
 
   while (depth > 0)
   {
@@ -48,23 +46,27 @@ trace_ray (RandomState* state, ray r, const scene* world, int depth)
       if (world->materials[rec.mat_idx]->scatter ((RandomState*)state, r, rec,
                                                   attenuation, r))
       {
-        factor *= attenuation;
+        result_color *= attenuation;
       }
       else
       {
-        result_color = color (0, 0, 0);
+        result_color *= world->materials[rec.mat_idx]->emit();
         break;
       }
     }
     else
     {
-      num t = 0.5 * (glm::normalize (r.dir).y + 1.0);
-      result_color = glm::mix (color (1.0, 1.0, 1.0), color (0.5, 0.7, 1.0), t);
+      // return background color
+      result_color *= color(0, 0, 0);
+      
+      //num t = 0.5 * (glm::normalize (r.dir).y + 1.0);
+      //result_color *= glm::mix (color (1.0, 1.0, 1.0), color (0.5, 0.7, 1.0), t);
       break;
+      
     }
     --depth;
   }
-  return result_color * factor;
+  return result_color;
 }
 
 __global__ void
@@ -148,7 +150,6 @@ main (int argc, char* argv[])
   // Allocating 2D buffer on device
   color *image, *d_image;
   int num_pixels = image_width * image_height;
-
   image = new color[num_pixels];
   CUDA_CALL (cudaMalloc ((void**)&d_image, num_pixels * sizeof (color)));
 
@@ -167,12 +168,14 @@ main (int argc, char* argv[])
   dim3 blocks{image_width / threads.x, image_height / threads.y};
 
   // Rendering Image on device
-  make_image<<<blocks, threads>>> (randStates, samples_per_pixel, d_world,
-                                   d_cam, max_depth, d_image);
+  for(int i = 0; i < 1; ++i) {
+    make_image<<<blocks, threads>>> (randStates, samples_per_pixel, d_world,
+                                    d_cam, max_depth, d_image);
 
-  CUDA_CALL (cudaDeviceSynchronize ());
+    CUDA_CALL (cudaDeviceSynchronize ());
 
-  std::cerr << "called kernel\n";
+    std::cerr << "called kernel\n";
+  }
 
   // Copying 2D buffer from device to host
   CUDA_CALL (cudaMemcpy (image, d_image, num_pixels * sizeof (color),

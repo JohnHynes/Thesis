@@ -20,7 +20,6 @@ degrees_to_radians (num degrees)
 }
 
 // Color Functions
-
 inline void
 write_color (std::ostream &out, const color &c, int samples_per_pixel)
 {
