@@ -15,13 +15,11 @@
 #include "TOMLLoader.hpp"
 
 color
-trace_ray (RandomState* state, ray r, const scene* world, int depth)
+trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
 {
-
   hit_record rec;
   color attenuation;
-  color factor (1, 1, 1);
-  color result_color = factor;
+  color result_color(1, 1, 1);
 
   while (depth > 0)
   {
@@ -45,23 +43,22 @@ trace_ray (RandomState* state, ray r, const scene* world, int depth)
       if (world->materials[rec.mat_idx]->scatter ((RandomState*)state, r, rec,
                                                   attenuation, r))
       {
-        factor *= attenuation;
+        result_color *= attenuation;
       }
       else
       {
-        result_color = color (0, 0, 0);
+        result_color *= world->materials[rec.mat_idx]->emit();
         break;
       }
     }
     else
     {
-      num t = 0.5 * (glm::normalize (r.dir).y + 1.0);
-      result_color = glm::mix (color (1.0, 1.0, 1.0), color (0.5, 0.7, 1.0), t);
+      result_color *= background_color;
       break;
     }
     --depth;
   }
-  return result_color * factor;
+  return result_color;
 }
 
 int main(int argc, char* argv[])
@@ -82,7 +79,7 @@ int main(int argc, char* argv[])
     const auto scene_data = toml::parse(filename);
 
     // Image
-    auto [samples_per_pixel, max_depth, image_width, image_height] = loadParams(scene_data);
+    auto [samples_per_pixel, max_depth, image_width, image_height, background_color] = loadParams(scene_data);
 
     // World
     scene world = loadScene(scene_data);
@@ -109,7 +106,7 @@ int main(int argc, char* argv[])
                 num u = (i + random_positive_unit(state)) / (image_width-1);
                 num v = (j + random_positive_unit(state)) / (image_height-1);
                 ray r = cam.get_ray(state, u, v);
-                pixel_color += trace_ray(state, r, &world, max_depth);
+                pixel_color += trace_ray(state, r, background_color, &world, max_depth);
             }
             image(j, i) = pixel_color;
         }
