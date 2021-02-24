@@ -1,22 +1,24 @@
-#pragma once
+#ifndef GPU_RAY_TRACING_RANDOM_HPP_
+#define GPU_RAY_TRACING_RANDOM_HPP_
 
-#include <glm/vec3.hpp>
-#include <random>
-
+#include "Preprocessor.hpp"
 #include "constants.hpp"
 #include "types.hpp"
 
+#include <glm/geometric.hpp>
+
 using RandomState = void*;
 
+#include <random>
 using RandomStateCPU = std::mt19937;
 
-#ifdef __CUDACC__
+#ifdef USE_GPU
 #include <curand.h>
 #include <curand_kernel.h>
 using RandomStateGPU = curandState;
 #endif
 
-HOST_DEVICE
+__host__ __device__
 static
 inline
 num
@@ -29,7 +31,7 @@ get_next_rand(RandomState* s) {
   #endif
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 num
 random_positive_unit (RandomState* s)
@@ -37,7 +39,7 @@ random_positive_unit (RandomState* s)
   return get_next_rand(s);
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 num
 random_unit (RandomState* s)
@@ -45,7 +47,7 @@ random_unit (RandomState* s)
   return get_next_rand(s) * 2.0 - 1.0;
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 num
 random_angle (RandomState* s)
@@ -53,7 +55,7 @@ random_angle (RandomState* s)
   return get_next_rand(s) * CONST(2.0) * pi;
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 int
 random_int (RandomState* s, int low, int high)
@@ -61,7 +63,7 @@ random_int (RandomState* s, int low, int high)
   return static_cast<int> (random_positive_unit (s) * (high - low) + low);
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 vec3
 random_unit_vector (RandomState* s)
@@ -72,7 +74,7 @@ random_unit_vector (RandomState* s)
   return vec3 (r * cos (a), r * sin (a), z);
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 vec3
 random_in_unit_sphere (RandomState* s)
@@ -86,7 +88,7 @@ random_in_unit_sphere (RandomState* s)
   }
 }
 
-HOST_DEVICE
+__host__ __device__
 inline
 vec3
 random_in_hemisphere (RandomState* s, const vec3 &normal)
@@ -97,3 +99,5 @@ random_in_hemisphere (RandomState* s, const vec3 &normal)
   else
     return -in_unit_sphere;
 }
+
+#endif

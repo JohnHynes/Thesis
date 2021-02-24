@@ -1,4 +1,7 @@
-#pragma once
+#ifndef GPU_RAY_TRACING_SCENE_HPP_
+#define GPU_RAY_TRACING_SCENE_HPP_
+
+#include "Preprocessor.hpp"
 
 #include <string>
 
@@ -6,7 +9,7 @@
 #include "Material.hpp"
 #include "types.hpp"
 
-#ifdef __CUDACC__
+#ifdef USE_GPU
 class scene;
 
 __global__ void
@@ -36,7 +39,7 @@ public:
     delete materials;
   }
 
-#ifdef __CUDACC__
+#ifdef USE_GPU
 
   scene*
   copy_to_device ()
@@ -107,6 +110,9 @@ public:
 };
 
 #ifdef __CUDACC__
+
+// TODO: move to Scene.cpp
+
 __global__ void
 fixup (scene* s,  material** materials, hittable** objects)
 {
@@ -134,4 +140,6 @@ fixup (scene* s,  material** materials, hittable** objects)
     s->objects[i] = new_h;
   }
 }
+#endif
+
 #endif

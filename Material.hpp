@@ -1,11 +1,15 @@
-#pragma once
+#ifndef GPU_RAY_TRACER_MATERIAL_HPP_
+#define GPU_RAY_TRACER_MATERIAL_HPP_
+
+#include "Preprocessor.hpp"
+#include "Random.hpp"
 
 #include "Hittable.hpp"
 #include "Ray.hpp"
 #include "Util.hpp"
 #include "types.hpp"
+
 #include <glm/geometric.hpp>
-#include <glm/glm.hpp>
 
 struct hit_record;
 
@@ -20,17 +24,21 @@ enum class material_id
 class material
 {
 protected:
-  HOST_DEVICE
+  __host__ __device__
   material (material_id i) : id (i)
   {
   }
 
 public:
-  HOST_DEVICE virtual bool
+  __host__ __device__ virtual ~material() {
+
+  }
+
+  __host__ __device__ virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const = 0;
 
-  HOST_DEVICE virtual color
+  __host__ __device__ virtual color
   emit () const
   {
     return color(0, 0, 0);
@@ -41,7 +49,7 @@ public:
   size_of (material* m);
 
   // Forward declaration of make_from
-  HOST_DEVICE
+  __host__ __device__
   static material*
   make_from (material* old);
 
@@ -52,12 +60,16 @@ public:
 class lambertian : public material
 {
 public:
-  HOST_DEVICE
+  __host__ __device__
   lambertian (const color& a) : material (material_id::Lambertian), albedo (a)
   {
   }
 
-  HOST_DEVICE
+  __host__ __device__
+  virtual ~lambertian() override {
+  }
+
+  __host__ __device__
   virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const override
@@ -75,13 +87,17 @@ public:
 class metal : public material
 {
 public:
-  HOST_DEVICE
+  __host__ __device__
   metal (const color& a, num f)
     : material (material_id::Metal), albedo (a), fuzz (f < 1 ? f : 1)
   {
   }
 
-  HOST_DEVICE
+  __host__ __device__
+  virtual ~metal() override {
+  }
+
+  __host__ __device__
   virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const override
@@ -102,13 +118,17 @@ public:
 class dielectric : public material
 {
 public:
-  HOST_DEVICE
+  __host__ __device__
   dielectric (const color& a, num index_of_refraction)
     : material (material_id::Dielectric), albedo (a), ir (index_of_refraction)
   {
   }
 
-  HOST_DEVICE
+  __host__ __device__
+  virtual ~dielectric() override {
+  }
+
+  __host__ __device__
   virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const override
@@ -117,10 +137,10 @@ public:
     num refraction_ratio = rec.front_face ? (CONST (1) / ir) : ir;
 
     vec3 unit_direction = glm::normalize (r_in.direction ());
-    num cos_theta = fmin (glm::dot (-unit_direction, rec.normal), 1.0);
-    num sin_theta = sqrt (CONST (1) - cos_theta * cos_theta);
+    num cos_theta = fminf (glm::dot (-unit_direction, rec.normal), CONST(1));
+    num sin_theta = sqrtf (CONST (1) - cos_theta * cos_theta);
 
-    bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+    bool cannot_refract = refraction_ratio * sin_theta > CONST(1);
     vec3 direction;
 
     if (cannot_refract){
@@ -139,27 +159,31 @@ public:
   num ir; // Index of Refraction
 
 private:
-  HOST_DEVICE
+  __host__ __device__
   static num
   reflectance (num cosine, num ref_idx)
   {
     // Use Schlick's approximation for reflectance.
-    auto r0 = (1 - ref_idx) / (1 + ref_idx);
+    auto r0 = (CONST(1) - ref_idx) / (CONST(1) + ref_idx);
     r0 = r0 * r0;
-    return r0 + (1 - r0) * pow ((1 - cosine), 5);
+    return r0 + (CONST(1) - r0) * powf ((CONST(1) - cosine), 5);
   }
 };
 
 class emissive : public material
 {
 public:
-  HOST_DEVICE
+  __host__ __device__
   emissive (const color& c, const num intensity)
     : material (material_id::Emissive), emitted_color (c * intensity)
   {
   }
 
-  HOST_DEVICE
+  __host__ __device__
+  virtual ~emissive() override {
+  }
+
+  __host__ __device__
   virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const override
@@ -167,7 +191,7 @@ public:
     return false;
   }
 
-  HOST_DEVICE
+  __host__ __device__
   virtual color
   emit() const override
   {
@@ -178,7 +202,8 @@ public:
   color emitted_color;
 };
 
-HOST
+__host__
+inline
 int
 material::size_of (material* m)
 {
@@ -197,7 +222,8 @@ material::size_of (material* m)
   }
 }
 
-HOST_DEVICE
+__host__ __device__
+inline
 material*
 material::make_from (material* old)
 {
@@ -215,3 +241,5 @@ material::make_from (material* old)
       return nullptr;
   }
 }
+
+#endif

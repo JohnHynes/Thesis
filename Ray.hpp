@@ -1,9 +1,11 @@
-#pragma once
+#ifndef GPU_RAY_TRACING_RAY_HPP_
+#define GPU_RAY_TRACING_RAY_HPP_
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include "Preprocessor.hpp"
 
 #include "types.hpp"
+
+#include <glm/vec3.hpp>
 
 class ray
 {
@@ -13,28 +15,35 @@ public:
 
 public:
     // Constructors
-    HOST_DEVICE
+    __host__ __device__
+    inline
     ray() : orig(), dir() {}
     
     constexpr ray(ray const &) = default;
     constexpr ray(ray &&) = default;
-    constexpr ray &operator=(ray const &) = default;
-    constexpr ray &operator=(ray &&) = default;
+    ray &operator=(ray const &) = default;
+    ray &operator=(ray &&) = default;
 
-    HOST_DEVICE 
+    __host__ __device__
+    inline
     ray(const point3 &neworigin, const vec3 &newdir)
         : orig(neworigin), dir(newdir) {}
 
-    HOST_DEVICE 
+    __host__ __device__
+    inline
     point3 origin() const  { return orig; }
     
-    HOST_DEVICE 
+    __host__ __device__
+    inline
     vec3 direction() const { return dir; }
 
     // Member Functions
-    HOST_DEVICE
+    __host__ __device__
+    inline
     point3 at(num t) const
     {
         return orig + t * dir;
     }
 };
+
+#endif
