@@ -242,7 +242,7 @@ public:
   {
     // TODO : Implement hit function.
     // 1. Use the Moller-Trumbore ray-triangle algorithm to compute t
-    num epsilon = 0.0000001;
+    num epsilon = CONST(0.0000001);
     vec3 edge1 = p2 - p1;
     vec3 edge2 = p3 - p1;
     vec3 h = glm::cross(r.dir, edge2);
@@ -251,7 +251,7 @@ public:
     {
       return false;
     }
-    num f = 1.0 / a;
+    num f = CONST(1.0) / a;
     vec3 s = r.orig - p1;
     num u = f * glm::dot(h, s);
     if (u < 0 || 1 < u)
@@ -260,7 +260,7 @@ public:
     }
     vec3 q = glm::cross(s, edge1);
     num v = f * glm::dot(r.dir, q);
-    if (v < 0 || 1 < u + v)
+    if (v < CONST(0) || CONST(1) < u + v)
     {
       return false;
     }

@@ -34,7 +34,7 @@ trace_ray (RandomState* state, ray r, color background_color, const scene* world
 
       for (int i = 0; i < world->object_count; ++i)
       {
-        if (world->objects[i]->hit (r, 0.0001, closest_seen, temp_hitrec))
+        if (world->objects[i]->hit (r, 0.0001f, closest_seen, temp_hitrec))
         {
           has_hit = true;
           closest_seen = temp_hitrec.t;

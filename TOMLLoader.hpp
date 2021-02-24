@@ -41,7 +41,7 @@ loadParams (const toml::value& scene_data) -> std::tuple<int, int, int, int, col
 
   const auto camera_data = toml::find (scene_data, "camera");
 
-  int width = height * toml::find<num> (camera_data, "aspect_ratio");
+  int width = static_cast<int>(height * toml::find<num> (camera_data, "aspect_ratio"));
   color background(toml::find<num> (camera_data, "background_color" , 0),
                   toml::find<num> (camera_data, "background_color" , 1),
                   toml::find<num> (camera_data, "background_color" , 2));

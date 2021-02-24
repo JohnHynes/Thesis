@@ -137,10 +137,10 @@ public:
     num refraction_ratio = rec.front_face ? (CONST (1) / ir) : ir;
 
     vec3 unit_direction = glm::normalize (r_in.direction ());
-    num cos_theta = fmin (glm::dot (-unit_direction, rec.normal), 1.0);
-    num sin_theta = sqrt (CONST (1) - cos_theta * cos_theta);
+    num cos_theta = fminf (glm::dot (-unit_direction, rec.normal), CONST(1));
+    num sin_theta = sqrtf (CONST (1) - cos_theta * cos_theta);
 
-    bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+    bool cannot_refract = refraction_ratio * sin_theta > CONST(1);
     vec3 direction;
 
     if (cannot_refract){
@@ -164,9 +164,9 @@ private:
   reflectance (num cosine, num ref_idx)
   {
     // Use Schlick's approximation for reflectance.
-    auto r0 = (1 - ref_idx) / (1 + ref_idx);
+    auto r0 = (CONST(1) - ref_idx) / (CONST(1) + ref_idx);
     r0 = r0 * r0;
-    return r0 + (1 - r0) * pow ((1 - cosine), 5);
+    return r0 + (CONST(1) - r0) * powf ((CONST(1) - cosine), 5);
   }
 };
 
