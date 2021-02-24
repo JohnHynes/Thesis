@@ -18,7 +18,7 @@
 
 HOST_DEVICE
 color
-trace_ray (RandomState* state, ray r, const scene* world, int depth)
+trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
 {
   hit_record rec;
   color attenuation;
@@ -56,13 +56,8 @@ trace_ray (RandomState* state, ray r, const scene* world, int depth)
     }
     else
     {
-      // return background color
-      result_color *= color(0, 0, 0);
-      
-      //num t = 0.5 * (glm::normalize (r.dir).y + 1.0);
-      //result_color *= glm::mix (color (1.0, 1.0, 1.0), color (0.5, 0.7, 1.0), t);
+      result_color *= background_color;
       break;
-      
     }
     --depth;
   }
@@ -80,8 +75,8 @@ init_random (RandomStateGPU* states, int seed, int pixels)
 }
 
 __global__ void
-make_image (RandomStateGPU* states, int samples_per_pixel, scene* world,
-            camera* cam, int max_depth, color* d_image)
+make_image (RandomStateGPU* states, int samples_per_pixel, color background_color,
+            scene* world, camera* cam, int max_depth, color* d_image)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -96,7 +91,7 @@ make_image (RandomStateGPU* states, int samples_per_pixel, scene* world,
     num u = (i + random_positive_unit (rngState)) / (width - 1);
     num v = (j + random_positive_unit (rngState)) / (height - 1);
     ray r = cam->get_ray (rngState, u, v);
-    pixel_color += trace_ray (rngState, r, world, max_depth);
+    pixel_color += trace_ray (rngState, r, background_color, world, max_depth);
   }
   d_image[j * width + i] = pixel_color;
   states[j * width + i] = state;
@@ -123,7 +118,7 @@ main (int argc, char* argv[])
   std::cerr << "parse toml\n";
 
   // Image
-  auto [samples_per_pixel, max_depth, image_width, image_height] =
+  auto [samples_per_pixel, max_depth, image_width, image_height, background_color] =
     loadParams (scene_data);
   std::cerr << "load image\n";
 
@@ -169,7 +164,7 @@ main (int argc, char* argv[])
 
   // Rendering Image on device
   for(int i = 0; i < 1; ++i) {
-    make_image<<<blocks, threads>>> (randStates, samples_per_pixel, d_world,
+    make_image<<<blocks, threads>>> (randStates, samples_per_pixel, background_color, d_world,
                                     d_cam, max_depth, d_image);
 
     CUDA_CALL (cudaDeviceSynchronize ());
