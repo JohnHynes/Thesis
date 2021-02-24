@@ -79,7 +79,7 @@ make_image (int seed, int samples_per_pixel, color background_color,
   curand_init (seed, id, 0, &state);
   RandomState* rngState = (RandomState*)&state;
 
-  color pixel_color (0.0, 0.0, 0.0);
+  color pixel_color (0.0f, 0.0f, 0.0f);
   for (int s = 0; s < samples_per_pixel; ++s)
   {
     num u = (i + random_positive_unit (rngState)) / (width - 1);

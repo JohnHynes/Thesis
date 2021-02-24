@@ -44,7 +44,7 @@ inline
 num
 random_unit (RandomState* s)
 {
-  return get_next_rand(s) * 2.0 - 1.0;
+  return get_next_rand(s) * CONST(2.0) - CONST(1.0);
 }
 
 __host__ __device__
@@ -52,7 +52,7 @@ inline
 num
 random_angle (RandomState* s)
 {
-  return get_next_rand(s) * CONST(2.0) * pi;
+  return get_next_rand(s) * (CONST(2.0) * pi);
 }
 
 __host__ __device__
@@ -70,8 +70,8 @@ random_unit_vector (RandomState* s)
 {
   num a = random_angle (s);
   num z = random_unit (s);
-  num r = sqrt (num (1) - z * z);
-  return vec3 (r * cos (a), r * sin (a), z);
+  num r = sqrtf (CONST (1.0) - z * z);
+  return vec3 (r * cosf (a), r * sinf (a), z);
 }
 
 __host__ __device__

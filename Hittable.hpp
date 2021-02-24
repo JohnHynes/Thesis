@@ -22,7 +22,7 @@ struct hit_record
   inline void
   set_face_normal (const ray &r, const vec3 &outward_normal)
   {
-    front_face = glm::dot (r.dir, outward_normal) < 0;
+    front_face = glm::dot (r.dir, outward_normal) < CONST(0.0);
     if (front_face)
     {
       normal = outward_normal;
@@ -188,13 +188,17 @@ public:
   int mat_idx;
   point3 p1, p2, p3;
   vec3 surface_normal;
+
 public:
   __host__ __device__
   rectangle(point3 _p1, point3 _p2, point3 _p3, int m)
-    : hittable(object_id::Rectangle), p1(_p1), p2(_p2), p3(_p3), mat_idx(m) {
-    vec3 v1 = p1 - p2;
-    vec3 v2 = p3 - p2;
-    surface_normal = glm::normalize(glm::cross(v1, v2));
+    : hittable(object_id::Rectangle)
+    , mat_idx(m)
+    , p1(_p1)
+    , p2(_p2)
+    , p3(_p3)
+    , surface_normal(glm::normalize(glm::cross(p1 - p2, p3 - p2)))
+  {
   }
 
 
