@@ -1,23 +1,37 @@
-#pragma once
+#ifndef GPU_RAY_TRACING_TOMLLOADER_HPP_
+#define GPU_RAY_TRACING_TOMLLOADER_HPP_
 
 #include <toml.hpp>
 
 #include <tuple>
+
+#include "Camera.hpp"
+#include "Scene.hpp"
+
+auto
+loadParams (const toml::value& scene_data) -> std::tuple<int, int, int, int, color>;
+
+auto
+loadCamera (const toml::value& scene_data) -> camera;
+
+auto
+loadScene (const toml::value& scene_data) -> scene;
+
+// TODO: move the below to a source file
+
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "Camera.hpp"
 #include "Material.hpp"
-#include "Scene.hpp"
 #include "Hittable.hpp"
-#include "types.hpp"
 
 using std::string;
 using std::vector;
 
+inline
 auto
-loadParams (const toml::value& scene_data)
+loadParams (const toml::value& scene_data) -> std::tuple<int, int, int, int, color>
 {
   const auto raytracing_data = toml::find (scene_data, "raytracing");
 
@@ -32,9 +46,10 @@ loadParams (const toml::value& scene_data)
                   toml::find<num> (camera_data, "background_color" , 1),
                   toml::find<num> (camera_data, "background_color" , 2));
 
-  return std::tuple<int, int, int, int, color>{samples, depth, width, height, background};
+  return {samples, depth, width, height, background};
 }
 
+inline
 camera
 loadCamera (const toml::value& scene_data)
 {
@@ -61,8 +76,9 @@ loadCamera (const toml::value& scene_data)
                  dist_to_focus);
 }
 
-scene
-loadScene (const toml::value& scene_data)
+inline
+auto
+loadScene (const toml::value& scene_data) -> scene
 {
   // declare temporary unordered map along with world
   std::unordered_map<string, material*> material_map;
@@ -169,3 +185,5 @@ loadScene (const toml::value& scene_data)
 
   return world;
 }
+
+#endif

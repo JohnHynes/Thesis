@@ -1,0 +1,10 @@
+-DUSE_GPU=1
+-std=c++17
+-I/opt/cuda/targets/x86_64-linux/include
+-I./glm/
+-I./toml11/
+-xcuda
+--cuda-gpu-arch=sm_61
+-L/opt/cuda/lib64
+-lcudart_static
+-Wno-invalid-constexpr

@@ -1,7 +1,9 @@
 #include <cuda.h>
+#include <cuda_runtime_api.h>
 
 #define GLM_FORCE_CUDA
 #include <glm/glm.hpp>
+
 #include <iostream>
 #include <toml.hpp>
 
@@ -16,14 +18,13 @@
 
 #include <fstream>
 
-HOST_DEVICE
+__host__ __device__
 color
 trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
 {
   hit_record rec;
   color attenuation;
   color result_color(1, 1, 1);
-
   while (depth > 0)
   {
     bool has_hit = false;
@@ -65,24 +66,17 @@ trace_ray (RandomState* state, ray r, color background_color, const scene* world
 }
 
 __global__ void
-init_random (RandomStateGPU* states, int seed, int pixels)
-{
-  int id = blockIdx.x * blockDim.x + threadIdx.x;
-  if (id < pixels)
-  {
-    curand_init (seed, id, 0, &states[id]);
-  }
-}
-
-__global__ void
-make_image (RandomStateGPU* states, int samples_per_pixel, color background_color,
+make_image (int seed, int samples_per_pixel, color background_color,
             scene* world, camera* cam, int max_depth, color* d_image)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   const int width = blockDim.x * gridDim.x;
   const int height = blockDim.y * gridDim.y;
-  RandomStateGPU state = states[j * width + i];
+
+  const int id = i + width * j;
+  RandomStateGPU state;
+  curand_init (seed, id, 0, &state);
   RandomState* rngState = (RandomState*)&state;
 
   color pixel_color (0.0, 0.0, 0.0);
@@ -94,7 +88,6 @@ make_image (RandomStateGPU* states, int samples_per_pixel, color background_colo
     pixel_color += trace_ray (rngState, r, background_color, world, max_depth);
   }
   d_image[j * width + i] = pixel_color;
-  states[j * width + i] = state;
 }
 
 int
@@ -150,21 +143,13 @@ main (int argc, char* argv[])
 
   std::cerr << "allocated image on device\n";
 
-  RandomStateGPU* randStates;
-  CUDA_CALL (
-    cudaMalloc ((void**)&randStates, num_pixels * sizeof (RandomStateGPU)));
-  init_random<<<num_pixels, 256>>> (randStates, 1337, num_pixels);
-  CUDA_CALL (cudaDeviceSynchronize ());
-
-  std::cerr << "initialized random state on device\n";
-
   // Declaring block dimensions
   dim3 threads{16, 16};
   dim3 blocks{image_width / threads.x, image_height / threads.y};
 
   // Rendering Image on device
   for(int i = 0; i < 1; ++i) {
-    make_image<<<blocks, threads>>> (randStates, samples_per_pixel, background_color, d_world,
+    make_image<<<blocks, threads>>> (1337, samples_per_pixel, background_color, d_world,
                                     d_cam, max_depth, d_image);
 
     CUDA_CALL (cudaDeviceSynchronize ());

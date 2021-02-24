@@ -1,10 +1,15 @@
 #pragma once
 
-#include <glm/vec3.hpp>
+#include "Preprocessor.hpp"
 
-#include "Util.hpp"
 #include "constants.hpp"
 #include "types.hpp"
+
+#include "Ray.hpp"
+
+#include "Random.hpp"
+
+#include "Util.hpp"
 
 class camera
 {
@@ -17,7 +22,7 @@ private:
   num lens_radius;
 
 public:
-  HOST
+  __host__
   camera (const point3& lookfrom, const point3& lookat, const vec3& vup,
           const num& vfov, const num& aspect_ratio, const num& aperture,
           const num& focus_dist)
@@ -34,7 +39,7 @@ public:
 
   #ifdef USE_GPU
 
-  HOST
+  __host__
   camera*
   copy_to_device()
   {
@@ -46,7 +51,7 @@ public:
 
   #endif
 
-  HOST
+  __host__
   void
   set (const point3& lookfrom, const point3& lookat, const vec3& vup,
        const num& vfov, const num& aspect_ratio, const num& aperture,
@@ -71,7 +76,7 @@ public:
   }
 
   template <typename RandomState>
-  HOST_DEVICE
+  __host__ __device__
   ray
   get_ray (RandomState* state, num s, num t) const
   {
@@ -82,7 +87,7 @@ public:
   }
 
 private:
-  HOST_DEVICE
+  __host__ __device__
   vec3
   random_in_unit_disk (RandomState* state) const
   {

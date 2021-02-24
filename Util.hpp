@@ -1,15 +1,12 @@
-#pragma once
+#ifndef GPU_RAY_TRACING_UTIL_HPP_
+#define GPU_RAY_TRACING_UTIL_HPP_
 
-#include "glm/glm.hpp"
 #include <cmath>
 #include <iostream>
-#include <random>
+#include <algorithm>
 
 #include "constants.hpp"
 #include "types.hpp"
-
-#include "Random.hpp"
-#include "Ray.hpp"
 
 // Utility Functions
 
@@ -31,7 +28,9 @@ write_color (std::ostream &out, const color &c, int samples_per_pixel)
 
   const num lower = 0;
   const num upper = 0.99999;
-  out << static_cast<int> (256 * glm::clamp (r, lower, upper)) << ' '
-      << static_cast<int> (256 * glm::clamp (g, lower, upper)) << ' '
-      << static_cast<int> (256 * glm::clamp (b, lower, upper)) << '\n';
+  out << static_cast<int> (256 * std::clamp (r, lower, upper)) << ' '
+      << static_cast<int> (256 * std::clamp (g, lower, upper)) << ' '
+      << static_cast<int> (256 * std::clamp (b, lower, upper)) << '\n';
 }
+
+#endif
