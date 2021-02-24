@@ -89,7 +89,7 @@ class metal : public material
 public:
   __host__ __device__
   metal (const color& a, num f)
-    : material (material_id::Metal), albedo (a), fuzz (f < 1 ? f : 1)
+    : material (material_id::Metal), albedo (a), fuzz (fminf(f, CONST(1)))
   {
   }
 
@@ -102,12 +102,10 @@ public:
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const override
   {
-    vec3 reflected =
-      glm::reflect (glm::normalize (r_in.direction ()), rec.normal);
-    scattered =
-      ray (rec.point, reflected + fuzz * random_in_hemisphere (state, rec.normal));
+    vec3 reflected = glm::reflect (glm::normalize (r_in.direction ()), rec.normal);
+    scattered = ray (rec.point, reflected + fuzz * random_in_hemisphere (state, rec.normal));
     attenuation = albedo;
-    return (glm::dot (scattered.direction (), rec.normal) > 0);
+    return (glm::dot (scattered.direction (), rec.normal) > CONST(0));
   }
 
 public:
@@ -164,7 +162,7 @@ private:
   reflectance (num cosine, num ref_idx)
   {
     // Use Schlick's approximation for reflectance.
-    auto r0 = (CONST(1) - ref_idx) / (CONST(1) + ref_idx);
+    num r0 = (CONST(1) - ref_idx) / (CONST(1) + ref_idx);
     r0 = r0 * r0;
     return r0 + (CONST(1) - r0) * powf ((CONST(1) - cosine), 5);
   }

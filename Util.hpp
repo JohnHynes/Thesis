@@ -13,21 +13,20 @@
 inline num
 degrees_to_radians (num degrees)
 {
-  return degrees * pi / 180.0;
+  return degrees * (pi / CONST(180.0));
 }
 
 // Color Functions
 inline void
 write_color (std::ostream &out, const color &c, int samples_per_pixel)
 {
-  num scale = num(1) / samples_per_pixel;
+  double scale = 1.0/ static_cast<double>(samples_per_pixel);
 
-  num r = sqrt (c.r * scale);
-  num g = sqrt (c.g * scale);
-  num b = sqrt (c.b * scale);
-
-  const num lower = 0;
-  const num upper = 0.99999;
+  double r = sqrt (c.r * scale);
+  double g = sqrt (c.g * scale);
+  double b = sqrt (c.b * scale);
+  const double lower = 0;
+  const double upper = 0.99999;
   out << static_cast<int> (256 * std::clamp (r, lower, upper)) << ' '
       << static_cast<int> (256 * std::clamp (g, lower, upper)) << ' '
       << static_cast<int> (256 * std::clamp (b, lower, upper)) << '\n';
