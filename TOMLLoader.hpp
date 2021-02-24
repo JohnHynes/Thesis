@@ -2,7 +2,7 @@
 
 #include <toml.hpp>
 
-#include <array>
+#include <tuple>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -24,9 +24,15 @@ loadParams (const toml::value& scene_data)
   int samples = toml::find<int> (raytracing_data, "samples");
   int depth = toml::find<int> (raytracing_data, "depth");
   int height = toml::find<int> (raytracing_data, "height");
-  int width = height * toml::find<num> (scene_data, "camera", "aspect_ratio");
 
-  return std::array<int, 4>{samples, depth, width, height};
+  const auto camera_data = toml::find (scene_data, "camera");
+
+  int width = height * toml::find<num> (camera_data, "aspect_ratio");
+  color background(toml::find<num> (camera_data, "background_color" , 0),
+                  toml::find<num> (camera_data, "background_color" , 1),
+                  toml::find<num> (camera_data, "background_color" , 2));
+
+  return std::tuple<int, int, int, int, color>{samples, depth, width, height, background};
 }
 
 camera
