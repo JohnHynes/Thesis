@@ -87,6 +87,7 @@ public:
     return d_scene;
   }
 
+/*
   void
   free_device ()
   {
@@ -101,6 +102,7 @@ public:
     cudaFree (objects);
     cudaFree (materials);
   }
+  */
 #endif
 };
 

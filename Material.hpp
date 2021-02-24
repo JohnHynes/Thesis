@@ -13,7 +13,8 @@ enum class material_id
 {
   Lambertian,
   Metal,
-  Dielectric
+  Dielectric,
+  Emissive
 };
 
 class material
@@ -28,6 +29,12 @@ public:
   HOST_DEVICE virtual bool
   scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
            ray& scattered) const = 0;
+
+  HOST_DEVICE virtual color
+  emit () const
+  {
+    return color(0, 0, 0);
+  }
 
   // Forward declaration of size_of
   static int
@@ -143,6 +150,34 @@ private:
   }
 };
 
+class emissive : public material
+{
+public:
+  HOST_DEVICE
+  emissive (const color& c, const num intensity)
+    : material (material_id::Emissive), emitted_color (c * intensity)
+  {
+  }
+
+  HOST_DEVICE
+  virtual bool
+  scatter (RandomState* state, const ray& r_in, const hit_record& rec, color& attenuation,
+           ray& scattered) const override
+  {
+    return false;
+  }
+
+  HOST_DEVICE
+  virtual color
+  emit() const override
+  {
+    return emitted_color;
+  }
+
+public:
+  color emitted_color;
+};
+
 HOST
 int
 material::size_of (material* m)
@@ -155,6 +190,8 @@ material::size_of (material* m)
       return sizeof (metal);
     case material_id::Dielectric:
       return sizeof (dielectric);
+    case material_id::Emissive:
+      return sizeof (emissive);
     default:
       return 0;
   }
@@ -172,6 +209,8 @@ material::make_from (material* old)
       return new metal (*reinterpret_cast<metal*> (old));
     case material_id::Dielectric:
       return new dielectric (*reinterpret_cast<dielectric*> (old));
+    case material_id::Emissive:
+      return new emissive (*reinterpret_cast<emissive*> (old));
     default:
       return nullptr;
   }

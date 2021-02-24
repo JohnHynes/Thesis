@@ -87,6 +87,9 @@ loadScene (const toml::value& scene_data)
       case 'd':
         ptr = new dielectric (c, toml::find<num> (mat, "ir"));
         break;
+      case 'e':
+        ptr = new emissive(c, toml::find<num> (mat, "intensity"));
+        break;
       default:
         ptr = nullptr;
     }
@@ -120,12 +123,35 @@ loadScene (const toml::value& scene_data)
     hittable* h = [&] () -> hittable* {
       switch (geo[0])
       {
-        case 's':
+        case 's': // Sphere
         {
           point3 p (toml::find<num> (obj, "position", 0),
                     toml::find<num> (obj, "position", 1),
                     toml::find<num> (obj, "position", 2));
           return new sphere (p, toml::find<num> (obj, "radius"), mat_index);
+        }
+        case 'p': // Plane
+        {
+          point3 p (toml::find<num> (obj, "position", 0),
+                    toml::find<num> (obj, "position", 1),
+                    toml::find<num> (obj, "position", 2));
+          vec3 n (toml::find<num> (obj, "normal", 0),
+                  toml::find<num> (obj, "normal", 1),
+                  toml::find<num> (obj, "normal", 2));
+          return new plane (p, n, mat_index);
+        }
+        case 't': // Triangle
+        {
+          point3 p1 (toml::find<num> (obj, "p1", 0),
+                    toml::find<num> (obj, "p1", 1),
+                    toml::find<num> (obj, "p1", 2));
+          point3 p2 (toml::find<num> (obj, "p2", 0),
+                    toml::find<num> (obj, "p2", 1),
+                    toml::find<num> (obj, "p2", 2));
+          point3 p3 (toml::find<num> (obj, "p3", 0),
+                    toml::find<num> (obj, "p3", 1),
+                    toml::find<num> (obj, "p3", 2));
+          return new triangle (p1, p2, p3, mat_index);
         }
         default:
           return nullptr;

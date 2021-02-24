@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <toml.hpp>
 #include <fstream>
+#include <omp.h>
 
 #include "types.hpp"
 #include "constants.hpp"
@@ -94,8 +95,10 @@ int main(int argc, char* argv[])
     RandomStateCPU cpu_state;
     RandomState* state = (RandomState*)&cpu_state;
 
+    auto start = omp_get_wtime();
+
     // Rendering image
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) schedule(guided, 16)
     for (int j = 0; j < image_height; ++j)
     {
         for (int i = 0; i < image_width; ++i)
@@ -111,6 +114,9 @@ int main(int argc, char* argv[])
             image(j, i) = pixel_color;
         }
     }
+
+    auto stop = omp_get_wtime();
+    std::cout << (stop - start) << std::endl;
 
   std::ofstream ofs{output};
   // Outputting Render Data
