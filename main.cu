@@ -18,13 +18,12 @@
 
 #include <fstream>
 
-__host__ __device__
-color
+__host__ __device__ color
 trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
 {
   hit_record rec;
   color attenuation;
-  color result_color(1, 1, 1);
+  color result_color (1, 1, 1);
   while (depth > 0)
   {
     bool has_hit = false;
@@ -34,7 +33,7 @@ trace_ray (RandomState* state, ray r, color background_color, const scene* world
 
       for (int i = 0; i < world->object_count; ++i)
       {
-        if (world->objects[i]->hit (r, 0.0001f, closest_seen, temp_hitrec))
+        if (world->objects[i].hit (r, 0.0001f, closest_seen, temp_hitrec))
         {
           has_hit = true;
           closest_seen = temp_hitrec.t;
@@ -44,14 +43,13 @@ trace_ray (RandomState* state, ray r, color background_color, const scene* world
     }
     if (has_hit)
     {
-      if (world->materials[rec.mat_idx]->scatter ((RandomState*)state, r, rec,
-                                                  attenuation, r))
+      if (world->materials[rec.mat_idx].scatter ((RandomState*)state, r, rec, attenuation, r))
       {
         result_color *= attenuation;
       }
       else
       {
-        result_color *= world->materials[rec.mat_idx]->emit();
+        result_color *= world->materials[rec.mat_idx].emit ();
         break;
       }
     }
@@ -95,6 +93,7 @@ main (int argc, char* argv[])
 {
   string filename{"scene.toml"};
   string output{"image.ppm"};
+  int seed{1337};
   if (argc > 1)
   {
     filename = argv[1];
@@ -103,63 +102,40 @@ main (int argc, char* argv[])
   {
     output = argv[2];
   }
-  std::cerr << "Command: " << argv[0] << ' ' << filename << ' ' << output
-            << '\n';
+  if (argc > 3)
+  {
+    seed = atoi(argv[3]);
+  }
 
-  // Parsing scene data from a toml file
+  std::cerr << "Command: " << argv[0] << ' ' << filename << ' ' << output << ' ' << seed << '\n';
+
   const auto scene_data = toml::parse (filename);
-  std::cerr << "parse toml\n";
-
-  // Image
-  auto [samples_per_pixel, max_depth, image_width, image_height, background_color] =
-    loadParams (scene_data);
-  std::cerr << "load image\n";
-
-  // World
+  auto [samples_per_pixel, max_depth, image_width, image_height, background_color] = loadParams (scene_data);
   scene world = loadScene (scene_data);
-
-  std::cerr << "load scene\n";
-
-  // Copying world to device
-  scene* d_world = world.copy_to_device ();
-
-  std::cerr << "copy scene\n";
-
-  // Camera
   camera cam = loadCamera (scene_data);
 
-  std::cerr << "load camera\n";
-
-  // Copying camera to device
+  scene* d_world = world.copy_to_device ();
   camera* d_cam = cam.copy_to_device ();
 
-  std::cerr << "copy camera\n";
-
-  // Allocating 2D buffer on device
   color *image, *d_image;
   int num_pixels = image_width * image_height;
   image = new color[num_pixels];
   CUDA_CALL (cudaMalloc ((void**)&d_image, num_pixels * sizeof (color)));
-
-  std::cerr << "allocated image on device\n";
 
   // Declaring block dimensions
   dim3 threads{16, 16};
   dim3 blocks{image_width / threads.x, image_height / threads.y};
 
   // Rendering Image on device
-  for(int i = 0; i < 1; ++i) {
-    make_image<<<blocks, threads>>> (1337, samples_per_pixel, background_color, d_world,
-                                    d_cam, max_depth, d_image);
+  make_image<<<blocks, threads>>> (seed, samples_per_pixel, background_color, d_world, d_cam, max_depth, d_image);
+  CUDA_CALL (cudaDeviceSynchronize ());
 
-    CUDA_CALL (cudaDeviceSynchronize ());
-
-    std::cerr << "called kernel\n";
-  }
+  //d_world->free_device();
+  //CUDA_CALL (cudaFree(d_cam));
 
   // Copying 2D buffer from device to host
-  CUDA_CALL (cudaMemcpy (image, d_image, num_pixels * sizeof (color),
-                         cudaMemcpyDeviceToHost));
+  CUDA_CALL (cudaMemcpy (image, d_image, num_pixels * sizeof (color), cudaMemcpyDeviceToHost));
+  //CUDA_CALL (cudaFree(d_image));
 
   std::ofstream ofs{output};
   // Outputting Render Data
@@ -176,7 +152,5 @@ main (int argc, char* argv[])
     }
   }
 
-  // Freeing Memory
-  free (image);
-  CUDA_CALL (cudaFree (d_image));
+  delete[] image;
 }
