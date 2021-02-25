@@ -23,14 +23,13 @@ loadScene (const toml::value& scene_data) -> scene;
 #include <unordered_map>
 #include <vector>
 
-#include "Material.hpp"
 #include "Hittable.hpp"
+#include "Material.hpp"
 
 using std::string;
 using std::vector;
 
-inline
-auto
+inline auto
 loadParams (const toml::value& scene_data) -> std::tuple<int, int, int, int, color>
 {
   const auto raytracing_data = toml::find (scene_data, "raytracing");
@@ -41,16 +40,16 @@ loadParams (const toml::value& scene_data) -> std::tuple<int, int, int, int, col
 
   const auto camera_data = toml::find (scene_data, "camera");
 
-  int width = static_cast<int>(height * toml::find<num> (camera_data, "aspect_ratio"));
-  color background(toml::find<num> (camera_data, "background_color" , 0),
-                  toml::find<num> (camera_data, "background_color" , 1),
-                  toml::find<num> (camera_data, "background_color" , 2));
+  int width = static_cast<int> (height * toml::find<num> (camera_data, "aspect_ratio"));
+
+  color background (toml::find<num> (camera_data, "background_color", 0),
+                    toml::find<num> (camera_data, "background_color", 1),
+                    toml::find<num> (camera_data, "background_color", 2));
 
   return {samples, depth, width, height, background};
 }
 
-inline
-camera
+inline camera
 loadCamera (const toml::value& scene_data)
 {
   const auto camera_data = toml::find (scene_data, "camera");
@@ -72,16 +71,14 @@ loadCamera (const toml::value& scene_data)
 
   num dist_to_focus = glm::length (lookfrom - lookat);
 
-  return camera (lookfrom, lookat, up_vector, fov, aspect_ratio, aperture,
-                 dist_to_focus);
+  return camera (lookfrom, lookat, up_vector, fov, aspect_ratio, aperture, dist_to_focus);
 }
 
-inline
-auto
+inline auto
 loadScene (const toml::value& scene_data) -> scene
 {
   // declare temporary unordered map along with world
-  std::unordered_map<string, material*> material_map;
+  std::unordered_map<string, material> material_map;
   scene world;
 
   // Getting material data
@@ -96,41 +93,38 @@ loadScene (const toml::value& scene_data) -> scene
              toml::find<num> (mat, "color", 1),
              toml::find<num> (mat, "color", 2));
 
-    material* ptr = nullptr;
-
+    auto id = toml::find<string> (mat, "id");
     switch (type[0])
     {
       case 'l':
-        ptr = new lambertian (c);
+        material_map.emplace (id, lambertian (c));
         break;
       case 'm':
-        ptr = new metal (c, toml::find<num> (mat, "fuzz"));
+        material_map.emplace (id, metal (c, toml::find<num> (mat, "fuzz")));
         break;
       case 'd':
-        ptr = new dielectric (c, toml::find<num> (mat, "ir"));
+        material_map.emplace (id, dielectric (c, toml::find<num> (mat, "ir")));
         break;
       case 'e':
-        ptr = new emissive(c, toml::find<num> (mat, "intensity"));
+        material_map.emplace (id, emissive (c, toml::find<num> (mat, "intensity")));
         break;
-      default:
-        ptr = nullptr;
     }
-    material_map[toml::find<string> (mat, "id")] = ptr;
   }
 
   // Converting unordered map into scene array
-  world.material_count = material_map.size();
-  world.materials = new material*[world.material_count];
+  world.material_count = material_map.size ();
+  world.materials = new material[world.material_count];
   int i = 0;
   for (const auto& [key, value] : material_map)
   {
     world.materials[i] = value;
     ++i;
   }
+
   const auto& object_data = toml::find (scene_data, "objects").as_array ();
 
-  world.object_count = object_data.size();
-  world.objects = new hittable*[world.object_count];
+  world.object_count = object_data.size ();
+  world.objects = new hittable[world.object_count];
 
   i = 0;
   for (const auto& obj : object_data)
@@ -142,7 +136,7 @@ loadScene (const toml::value& scene_data) -> scene
 
     std::string geo = toml::find<std::string> (obj, "geometry");
 
-    hittable* h = [&] () -> hittable* {
+    world.objects[i] = [&] () -> hittable {
       switch (geo[0])
       {
         case 's': // Sphere
@@ -150,7 +144,7 @@ loadScene (const toml::value& scene_data) -> scene
           point3 p (toml::find<num> (obj, "position", 0),
                     toml::find<num> (obj, "position", 1),
                     toml::find<num> (obj, "position", 2));
-          return new sphere (p, toml::find<num> (obj, "radius"), mat_index);
+          return {sphere (p, toml::find<num> (obj, "radius"), mat_index)};
         }
         case 'p': // Plane
         {
@@ -160,29 +154,27 @@ loadScene (const toml::value& scene_data) -> scene
           vec3 n (toml::find<num> (obj, "normal", 0),
                   toml::find<num> (obj, "normal", 1),
                   toml::find<num> (obj, "normal", 2));
-          return new plane (p, n, mat_index);
+          return {plane (p, n, mat_index)};
         }
         case 't': // Triangle
         {
           point3 p1 (toml::find<num> (obj, "p1", 0),
-                    toml::find<num> (obj, "p1", 1),
-                    toml::find<num> (obj, "p1", 2));
+                     toml::find<num> (obj, "p1", 1),
+                     toml::find<num> (obj, "p1", 2));
           point3 p2 (toml::find<num> (obj, "p2", 0),
-                    toml::find<num> (obj, "p2", 1),
-                    toml::find<num> (obj, "p2", 2));
+                     toml::find<num> (obj, "p2", 1),
+                     toml::find<num> (obj, "p2", 2));
           point3 p3 (toml::find<num> (obj, "p3", 0),
-                    toml::find<num> (obj, "p3", 1),
-                    toml::find<num> (obj, "p3", 2));
-          return new triangle (p1, p2, p3, mat_index);
+                     toml::find<num> (obj, "p3", 1),
+                     toml::find<num> (obj, "p3", 2));
+          return {triangle (p1, p2, p3, mat_index)};
         }
         default:
-          return nullptr;
+          return {};
       }
     }();
-    world.objects[i] = h;
     ++i;
   }
-
   return world;
 }
 
