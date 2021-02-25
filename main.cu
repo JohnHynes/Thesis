@@ -1,22 +1,12 @@
-#include <cuda.h>
-#include <cuda_runtime_api.h>
-
-#define GLM_FORCE_CUDA
-#include <glm/glm.hpp>
-
+#include <fstream>
 #include <iostream>
-#include <toml.hpp>
 
 #include "constants.hpp"
 #include "types.hpp"
 
-#include "Camera.hpp"
-#include "Material.hpp"
-#include "Ray.hpp"
 #include "TOMLLoader.hpp"
 #include "Util.hpp"
 
-#include <fstream>
 
 __host__ __device__ color
 trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
@@ -64,18 +54,42 @@ trace_ray (RandomState* state, ray r, color background_color, const scene* world
 }
 
 __global__ void
+__launch_bounds__(256, 4) // gimme 1024 threads
 make_image (int seed, int samples_per_pixel, color background_color,
             scene* world, camera* cam, int max_depth, color* d_image)
 {
+  extern __shared__ char shm[];
+
+
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j = blockIdx.y * blockDim.y + threadIdx.y;
   const int width = blockDim.x * gridDim.x;
   const int height = blockDim.y * gridDim.y;
 
   const int id = i + width * j;
+
+
   RandomStateGPU state;
   curand_init (seed, id, 0, &state);
   RandomState* rngState = (RandomState*)&state;
+
+  // shared memory
+
+  scene local_world;
+  local_world.material_count = world->material_count;
+  local_world.object_count = world->object_count;
+  local_world.materials = (material*)shm;
+  local_world.objects = (hittable*)(local_world.materials + local_world.material_count);
+
+  const int local_id = threadIdx.x + blockDim.x * threadIdx.y;
+  if (local_id < local_world.material_count) {
+    local_world.materials[local_id] = world->materials[local_id];
+  }
+  if (local_id < local_world.object_count) {
+    local_world.objects[local_id] = world->objects[local_id];
+  }
+
+  __syncthreads(); // all threads must wait until the information has been loaded
 
   color pixel_color (0.0f, 0.0f, 0.0f);
   for (int s = 0; s < samples_per_pixel; ++s)
@@ -83,7 +97,7 @@ make_image (int seed, int samples_per_pixel, color background_color,
     num u = (i + random_positive_unit (rngState)) / (width - 1);
     num v = (j + random_positive_unit (rngState)) / (height - 1);
     ray r = cam->get_ray (rngState, u, v);
-    pixel_color += trace_ray (rngState, r, background_color, world, max_depth);
+    pixel_color += trace_ray (rngState, r, background_color, &local_world, max_depth);
   }
   d_image[j * width + i] = pixel_color;
 }
@@ -125,9 +139,11 @@ main (int argc, char* argv[])
   // Declaring block dimensions
   dim3 threads{16, 16};
   dim3 blocks{image_width / threads.x, image_height / threads.y};
+  // request enough shared memory to hold all of the materials and hittables
+  int shmSize = sizeof(material) * world.material_count + sizeof(hittable) * world.object_count;
 
   // Rendering Image on device
-  make_image<<<blocks, threads>>> (seed, samples_per_pixel, background_color, d_world, d_cam, max_depth, d_image);
+  make_image<<<blocks, threads, shmSize>>> (seed, samples_per_pixel, background_color, d_world, d_cam, max_depth, d_image);
   CUDA_CALL (cudaDeviceSynchronize ());
 
   //d_world->free_device();
