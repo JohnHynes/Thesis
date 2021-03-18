@@ -91,6 +91,24 @@ public:
   __host__ __device__ bounding_node(int l, int r, bounding_box b)
       : left_idx(l), right_idx(r), box(b) {}
 
+  __host__ bounding_box surrounding_box(point3 p1, point3 p2)
+  {
+    point3 min, max;
+    for (int i = 0; i < 3; ++i) {
+      min[i] = std::min(p1[i], p2[i]);
+      max[i] = std::max(p1[i], p2[i]);
+    }
+    return bounding_box(min, max);
+  }
+
+  __host__ bounding_node(const hittable* objects, hittable* bvh, int start, int end, double time0, double time1)
+  {
+    // Forward declaration issues...
+    bounding_box box_left = objects[left_idx].bounding_box();
+    bounding_box box_right = objects[right_idx].bounding_box();
+    box = surrounding_box(box_left, box_right);
+  }
+
   __host__ __device__ inline bool hit(const ray &r, num t_min, num t_max,
                                       hit_record &hit_rec) const override {
     return box.hit(r, t_min, t_max, hit_rec);
@@ -286,18 +304,8 @@ public:
   __host__ inline bounding_box get_bounding_box() const override {
     point3 min, max;
     for (int i = 0; i < 3; ++i) {
-      if (p1[i] < p2[i]) {
-        min[i] = p1[i];
-        max[i] = p2[i];
-      } else {
-        min[i] = p2[i];
-        max[i] = p1[i];
-      }
-      if (p3[i] < min[i]) {
-        min[i] = p3[i];
-      } else if (p3[i] > max[i]) {
-        max[i] = p3[i];
-      }
+      min[i] = std::min({p1[i], p2[i], p3[i]});
+      max[i] = std::max({p1[i], p2[i], p3[i]});
     }
     return bounding_box(min, max);
   }
@@ -313,6 +321,7 @@ struct null_hittable : public IHittable {
   }
 
   __host__ inline bounding_box get_bounding_box() const override {
+    // Returning point-sized bounding box.
     return bounding_box(point3(0.0f, 0.0f, 0.0f), point3(0.0f, 0.0f, 0.0f));
   }
 };
@@ -361,6 +370,25 @@ union hittable_data {
       return bn.hit(std::forward<Args>(args)...);
     default:
       return n.hit(std::forward<Args>(args)...);
+    }
+  }
+
+  __host__ __device__ inline bounding_box get_bounding_box(hittable_id id) const {
+    switch (id) {
+    case hittable_id::Sphere:
+      return s.get_bounding_box();
+    case hittable_id::Plane:
+      return p.get_bounding_box();
+    case hittable_id::Rectangle:
+      return r.get_bounding_box();
+    case hittable_id::Triangle:
+      return t.get_bounding_box();
+    case hittable_id::BoundingBox:
+      return bb.get_bounding_box();
+    case hittable_id::BoundingNode:
+      return bn.get_bounding_box();
+    default:
+      return n.get_bounding_box();
     }
   }
 };
@@ -451,6 +479,10 @@ struct hittable {
   __host__ __device__ inline bool hit(const ray &r, num t_min, num t_max,
                                       hit_record &rec) const {
     return data.hit(id, r, t_min, t_max, rec);
+  }
+
+  __host__ __device__ inline bounding_box get_bounding_box() const {
+    return data.get_bounding_box(id);
   }
 
   hittable_id id;
