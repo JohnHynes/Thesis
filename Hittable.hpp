@@ -8,7 +8,7 @@
 #include <glm/geometric.hpp>
 #include <limits>
 
-class hittable;
+struct hittable;
 
 struct hit_record {
   point3 point;
@@ -81,31 +81,58 @@ public:
   }
 };
 
-struct bounding_node : public IHittable {
+struct bounding_tree_node : public IHittable {
 public:
   // positive idx = node, negative idx = leaf
-  int left_idx, right_idx;
+  bounding_tree_node* left, right;
   bounding_box box;
 
 public:
-  __host__ __device__ bounding_node(int l, int r, bounding_box b)
-      : left_idx(l), right_idx(r), box(b) {}
+  __host__ __device__ bounding_tree_node(bounding_tree_node* l, bounding_tree_node* r, bounding_box b)
+      : left(l), right(r), box(b) {}
 
-  __host__ bounding_box surrounding_box(point3 p1, point3 p2)
+  __host__ bounding_box surrounding_box(bounding_box b1, bounding_box b2)
   {
     point3 min, max;
     for (int i = 0; i < 3; ++i) {
-      min[i] = std::min(p1[i], p2[i]);
-      max[i] = std::max(p1[i], p2[i]);
+      min[i] = std::min(b1.minimum[i], b2.minimum[i]);
+      max[i] = std::max(b1.maximum[i], b2.maximum[i]);
     }
     return bounding_box(min, max);
   }
 
-  __host__ bounding_node(const hittable* objects, hittable* bvh, int start, int end, double time0, double time1)
+  template<typename HittableArray>
+  __host__ bounding_tree_node(const HittableArray src_objects, int objects_count, int start, int end, double time0, double time1)
   {
-    // Forward declaration issues...
-    bounding_box box_left = objects[left_idx].bounding_box();
-    bounding_box box_right = objects[right_idx].bounding_box();
+    HittableArray temp_objects[objects_count];
+    std::copy(src_objects, src_objects + objects_count, temp_objects);
+    int range = end - start;
+
+    auto comparator; // make comparison function
+
+    if (range == 1)
+    {
+      left = right = objects[start];
+    }
+    else if (range == 2)
+    {
+      if (comparator(temp_objects[start], temp_objects[start + 1])) {
+          left = temp_objects[start];
+          right = temp_objects[start + 1];
+      } else {
+          left = temp_objects[start + 1];
+          right = temp_objects[start];
+      }
+    } else {
+        std::sort(temp_objects + start, temp_objects + end, comparator);
+
+        int mid = start + range / CONST(2);
+        left = &bounding_tree_node(temp_objects, object_count, start, mid, time0, time1);
+        right = &bounding_tree_node(temp_objects, objects_count, mid, end, time0, time1);
+    }
+
+    bounding_box box_left = left->bounding_box();
+    bounding_box box_right = right->bounding_box();
     box = surrounding_box(box_left, box_right);
   }
 
