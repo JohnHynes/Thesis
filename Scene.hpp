@@ -8,37 +8,22 @@
 
 class scene {
 public:
-  hittable *objects;
+  hittable *hittables;
+  int hittables_size;
   int object_count;
-  //hittable *bvh;
-  //int bvh_size;
   material *materials;
   int material_count;
 
 public:
-  /*
-  __host__ void generate_bvh() {
-    // Create modifiable array of objects
-    hittable *temp_objects = new hittable[object_count];
-    std::copy(objects, objects + object_count, temp_objects);
-
-    bvh = new hittable[object_count - 1];
-
-    for (hittable *h = objects; h < objects + object_count; ++h) {
-
-    }
-  }
-  */
   void free_host() {
-    delete objects;
-    //delete bvh;
+    delete hittables;
     delete materials;
   }
 
 #ifdef USE_GPU
 
   void free_device() {
-    cudaFree(objects);
+    cudaFree(hittables);
     cudaFree(materials);
   }
 
@@ -46,9 +31,9 @@ public:
     scene gpu_scene(*this);
     {
       const int size = sizeof(hittable) * object_count;
-      CUDA_CALL(cudaMalloc(&gpu_scene.objects, size));
+      CUDA_CALL(cudaMalloc(&gpu_scene.hittables, size));
       CUDA_CALL(
-          cudaMemcpy(gpu_scene.objects, objects, size, cudaMemcpyHostToDevice));
+          cudaMemcpy(gpu_scene.hittables, hittables, size, cudaMemcpyHostToDevice));
     }
     {
       const int size = sizeof(material) * material_count;
