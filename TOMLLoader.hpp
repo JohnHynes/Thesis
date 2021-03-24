@@ -191,6 +191,7 @@ loadScene (const toml::value& scene_data) -> scene
 
   bounding_tree_node* tree = new bounding_tree_node_node(hittable_ptrs, world.hittables_size, state, start, end);
   convert_tree_to_array(tree, world.hittables);
+  destruct_tree(tree);
   return world;
 }
 

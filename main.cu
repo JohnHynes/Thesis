@@ -7,12 +7,11 @@
 #include "TOMLLoader.hpp"
 #include "Util.hpp"
 
+using node_ptr = hittable *;
 
-__host__ __device__ bool find_closest_hit(const scene *world, ray &r, num t_min,
+__host__ __device__ bool find_closest_hit(const scene *world, node_ptr* stack, ray &r, num t_min,
                                           num t_max, hit_record &hitrec) {
   // Allocate thread-local stack
-  using node_ptr = hittable *;
-  node_ptr stack[32];
   node_ptr *stack_ptr = stack;
 
   // Initialize stack
@@ -49,7 +48,7 @@ __host__ __device__ bool find_closest_hit(const scene *world, ray &r, num t_min,
   return has_hit;
 }
 
-__host__ __device__ color trace_ray(RandomState *state, ray r, color background_color,
+__host__ __device__ color trace_ray(RandomState *state, node_ptr* stack, ray r, color background_color,
                 const scene *world, int depth) {
   hit_record rec;
   color attenuation;
@@ -57,7 +56,7 @@ __host__ __device__ color trace_ray(RandomState *state, ray r, color background_
 
   while (depth > 0) {
     // Test bvh for a hit
-    if (find_closest_hit(world, r, 0.0001f, infinity, rec)) {
+    if (find_closest_hit(world, stack, r, 0.0001f, infinity, rec)) {
       if (world->materials[rec.mat_idx].scatter((RandomState *)state, r, rec,
                                                 attenuation, r)) {
         result_color *= attenuation;
@@ -113,13 +112,16 @@ make_image (int seed, int samples_per_pixel, color background_color,
 
   __syncthreads(); // all threads must wait until the information has been loaded
 
+  // allocating thread-local stack
+  node_ptr stack[32];
+
   color pixel_color (0.0f, 0.0f, 0.0f);
   for (int s = 0; s < samples_per_pixel; ++s)
   {
     num u = (i + random_positive_unit (rngState)) / (width - 1);
     num v = (j + random_positive_unit (rngState)) / (height - 1);
     ray r = cam->get_ray (rngState, u, v);
-    pixel_color += trace_ray (rngState, r, background_color, &local_world, max_depth);
+    pixel_color += trace_ray (rngState, stack, r, background_color, &local_world, max_depth);
   }
   d_image[j * width + i] = pixel_color;
 }
