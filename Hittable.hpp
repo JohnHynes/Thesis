@@ -50,10 +50,6 @@ struct IHittable {
                                        hit_record &hitrec) const = 0;
 
   __host__ virtual inline bounding_box get_bounding_box() const = 0;
-
-  __host__ __device__ virtual int get_left() const { return -1; };
-
-  __host__ __device__ virtual int get_right() const { return -1; };
 };
 
 struct bounding_box : public IHittable {
@@ -158,10 +154,6 @@ public:
   }
 
   __host__ inline bounding_box get_bounding_box() const override { return box; }
-
-  __host__ __device__ virtual int get_left() const override { return left; }
-
-  __host__ __device__ virtual int get_right() const override { return right; }
 };
 
 struct sphere : public IHittable {
@@ -315,7 +307,7 @@ public:
   __host__ __device__ virtual bool hit(const ray &r, num t_min, num t_max,
                                        hit_record &rec) const override {
     // TODO : Implement hit function.
-    // 1. Use the Moller-Trumbore ray-triangle algorithm to compute t
+    // Use the Moller-Trumbore ray-triangle algorithm to compute t
     num epsilon = CONST(0.0000001);
     vec3 edge1 = p2 - p1;
     vec3 edge2 = p3 - p1;
@@ -441,22 +433,9 @@ union hittable_data {
     }
   }
 
-  __host__ __device__ inline int get_left(hittable_id id) const {
-    switch (id) {
-    case hittable_id::BoundingArrayNode:
-      return ban.get_left();
-    default:
-      return n.get_left();
-    }
-  }
-
-  __host__ __device__ inline int get_right(hittable_id id) const {
-    switch (id) {
-    case hittable_id::BoundingArrayNode:
-      return ban.get_right();
-    default:
-      return n.get_right();
-    }
+  __host__ __device__ bounding_array_node const &
+  as_bounding_array_node() const {
+    return ban;
   }
 };
 
@@ -552,10 +531,9 @@ struct hittable {
     return data.get_bounding_box(id);
   }
 
-  __host__ __device__ virtual int get_left() const { return data.get_left(id); }
-
-  __host__ __device__ virtual int get_right() const {
-    return data.get_right(id);
+  __host__ __device__ bounding_array_node const &
+  as_bounding_array_node() const {
+    return data.as_bounding_array_node();
   }
 
   hittable_id id;
@@ -640,8 +618,6 @@ inline __host__ int convert_tree_to_array(bounding_tree_node *root,
       int right_id = convert_tree_to_array(node->right, hittables);
       hittables[index] =
           bounding_array_node(left_id, right_id, root->get_bounding_box());
-      std::cerr << index << " : ArrayNode " << left_id << " " << right_id
-                << std::endl;
       return index;
     }
   }

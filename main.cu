@@ -8,43 +8,64 @@
 #include "Util.hpp"
 
 
-__host__ __device__ color
-trace_ray (RandomState* state, ray r, color background_color, const scene* world, int depth)
-{
+__host__ __device__ bool find_closest_hit(const scene *world, ray &r, num t_min,
+                                          num t_max, hit_record &hitrec) {
+  // Allocate thread-local stack
+  using node_ptr = hittable *;
+  node_ptr stack[32];
+  node_ptr *stack_ptr = stack;
+
+  // Initialize stack
+  *stack_ptr++ = NULL;
+
+  // Initialize local variables
+  hit_record temp_hitrec;
+  num closest_seen = t_max;
+  bool has_hit = false;
+
+  // Traverse tree starting from the root
+  node_ptr node = world->hittables;
+  do {
+    if (node->hit(r, t_min, closest_seen, temp_hitrec)) {
+      // node was hit, test for leaf
+      if (node->id != hittable_id::BoundingArrayNode) {
+        // node is a leaf
+        if (temp_hitrec.t < closest_seen) {
+          closest_seen = temp_hitrec.t;
+          hitrec = temp_hitrec;
+        }
+        has_hit = true;
+      } else {
+        // node is not a leaf, push left and right children onto stack.
+        *stack_ptr++ = world->hittables + node->as_bounding_array_node().left;
+        *stack_ptr++ = world->hittables + node->as_bounding_array_node().right;
+      }
+    }
+    // pop node off stack
+    node = *--stack_ptr;
+
+  } while (node != NULL);
+
+  return has_hit;
+}
+
+__host__ __device__ color trace_ray(RandomState *state, ray r, color background_color,
+                const scene *world, int depth) {
   hit_record rec;
   color attenuation;
-  color result_color (1, 1, 1);
-  while (depth > 0)
-  {
-    bool has_hit = false;
-    {
-      num closest_seen = infinity;
-      hit_record temp_hitrec;
+  color result_color(1, 1, 1);
 
-      for (int i = 0; i < world->object_count; ++i)
-      {
-        if (world->objects[i].hit (r, 0.0001f, closest_seen, temp_hitrec))
-        {
-          has_hit = true;
-          closest_seen = temp_hitrec.t;
-          rec = temp_hitrec;
-        }
-      }
-    }
-    if (has_hit)
-    {
-      if (world->materials[rec.mat_idx].scatter ((RandomState*)state, r, rec, attenuation, r))
-      {
+  while (depth > 0) {
+    // Test bvh for a hit
+    if (find_closest_hit(world, r, 0.0001f, infinity, rec)) {
+      if (world->materials[rec.mat_idx].scatter((RandomState *)state, r, rec,
+                                                attenuation, r)) {
         result_color *= attenuation;
-      }
-      else
-      {
-        result_color *= world->materials[rec.mat_idx].emit ();
+      } else {
+        result_color *= world->materials[rec.mat_idx].emit();
         break;
       }
-    }
-    else
-    {
+    } else {
       result_color *= background_color;
       break;
     }
@@ -78,15 +99,16 @@ make_image (int seed, int samples_per_pixel, color background_color,
   scene local_world;
   local_world.material_count = world->material_count;
   local_world.object_count = world->object_count;
+  local_world.hittables_size = world->hittables_size;
   local_world.materials = (material*)shm;
-  local_world.objects = (hittable*)(local_world.materials + local_world.material_count);
+  local_world.hittables = (hittable*)(local_world.materials + local_world.material_count);
 
   const int local_id = threadIdx.x + blockDim.x * threadIdx.y;
   if (local_id < local_world.material_count) {
     local_world.materials[local_id] = world->materials[local_id];
   }
-  if (local_id < local_world.object_count) {
-    local_world.objects[local_id] = world->objects[local_id];
+  if (local_id < local_world.hittables_size) {
+    local_world.hittables[local_id] = world->hittables[local_id];
   }
 
   __syncthreads(); // all threads must wait until the information has been loaded
@@ -140,7 +162,7 @@ main (int argc, char* argv[])
   dim3 threads{16, 16};
   dim3 blocks{image_width / threads.x, image_height / threads.y};
   // request enough shared memory to hold all of the materials and hittables
-  int shmSize = sizeof(material) * world.material_count + sizeof(hittable) * world.object_count;
+  int shmSize = sizeof(material) * world.material_count + sizeof(hittable) * world.hittables_size;
 
   // Rendering Image on device
   make_image<<<blocks, threads, shmSize>>> (seed, samples_per_pixel, background_color, d_world, d_cam, max_depth, d_image);

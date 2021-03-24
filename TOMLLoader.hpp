@@ -189,41 +189,8 @@ loadScene (const toml::value& scene_data) -> scene
     hittable_ptrs[i] = world.hittables + i;
   }
 
-  std::cout << "TREE CONTENTS" << std::endl;
   bounding_tree_node* tree = new bounding_tree_node_node(hittable_ptrs, world.hittables_size, state, start, end);
-
-  std::cout << "ARRAY-TREE CONTENTS" << std::endl;
   convert_tree_to_array(tree, world.hittables);
-
-  std::cout << "FINAL ARRAY CONTENTS" << std::endl;
-  for(int i = 0 ; i < world.hittables_size; ++i)
-  {
-    //bounding_array_node n = world.hittables[i];
-    switch (world.hittables[i].id) {
-    case hittable_id::Sphere:
-      std::cerr << "Sphere " << std::endl;
-      break;
-    case hittable_id::Plane:
-      std::cerr << "Plane " << std::endl;
-      break;
-    case hittable_id::Rectangle:
-      std::cerr << "Rectangle " << std::endl;
-      break;
-    case hittable_id::Triangle:
-      std::cerr << "Triangle " << std::endl;
-      break;
-    case hittable_id::BoundingBox:
-      std::cerr << "BoundingBox " << std::endl;
-      break;
-    case hittable_id::BoundingArrayNode:
-      //std::cerr << "BoundingArrayNode " << n.left << " " << n.right << std::endl;
-      std::cerr << "BoundingArrayNode " << std::endl;
-      break;
-    case hittable_id::Unknown:
-      std::cerr << "Unknown " << std::endl;
-      break;
-    }
-  }
   return world;
 }
 

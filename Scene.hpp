@@ -30,7 +30,7 @@ public:
   scene *copy_to_device() {
     scene gpu_scene(*this);
     {
-      const int size = sizeof(hittable) * object_count;
+      const int size = sizeof(hittable) * hittables_size;
       CUDA_CALL(cudaMalloc(&gpu_scene.hittables, size));
       CUDA_CALL(
           cudaMemcpy(gpu_scene.hittables, hittables, size, cudaMemcpyHostToDevice));

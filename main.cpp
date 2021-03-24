@@ -19,7 +19,7 @@ __host__ __device__ bool find_closest_hit(const scene *world, ray &r, num t_min,
                                           num t_max, hit_record &hitrec) {
   // Allocate thread-local stack
   using node_ptr = hittable *;
-  node_ptr stack[16];
+  node_ptr stack[32];
   node_ptr *stack_ptr = stack;
 
   // Initialize stack
@@ -34,22 +34,22 @@ __host__ __device__ bool find_closest_hit(const scene *world, ray &r, num t_min,
   node_ptr node = world->hittables;
   do {
     if (node->hit(r, t_min, closest_seen, temp_hitrec)) {
+      // node was hit, test for leaf
       if (node->id != hittable_id::BoundingArrayNode) {
+        // node is a leaf
         if (temp_hitrec.t < closest_seen) {
           closest_seen = temp_hitrec.t;
           hitrec = temp_hitrec;
         }
         has_hit = true;
-        --stack_ptr;
       } else {
-        // Push left and right children onto the stack.
-        *stack_ptr++ = world->hittables + node->get_left();
-        *stack_ptr++ = world->hittables + node->get_right();
+        // node is not a leaf, push left and right children onto stack.
+        *stack_ptr++ = world->hittables + node->as_bounding_array_node().left;
+        *stack_ptr++ = world->hittables + node->as_bounding_array_node().right;
       }
-    } else {
-      node = *--stack_ptr;
     }
-    node = *stack_ptr;
+    // pop node off stack
+    node = *--stack_ptr;
 
   } while (node != NULL);
 
@@ -110,10 +110,10 @@ int main(int argc, char *argv[]) {
   RandomStateCPU cpu_state;
   RandomState *state = (RandomState *)&cpu_state;
 
-//  auto start = omp_get_wtime();
+  auto start = omp_get_wtime();
 
-// Rendering image
-//#pragma omp parallel for collapse(2) schedule(guided, 16)
+  // Rendering image
+  #pragma omp parallel for collapse(2) schedule(guided, 16)
   for (int j = 0; j < image_height; ++j) {
     for (int i = 0; i < image_width; ++i) {
       color pixel_color(0.0, 0.0, 0.0);
@@ -127,8 +127,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
-//  auto stop = omp_get_wtime();
-//  std::cout << (stop - start) << std::endl;
+  auto stop = omp_get_wtime();
+  std::cout << (stop - start) << std::endl;
 
   std::ofstream ofs{output};
   // Outputting Render Data
