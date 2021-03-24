@@ -108,12 +108,16 @@ __host__ inline bool z_compare(const bounding_box a, const bounding_box b) {
 
 struct bounding_tree_node {
   virtual __host__ bounding_box get_bounding_box() const = 0;
+
+  virtual ~bounding_tree_node() {};
 };
 
 struct bounding_tree_node_object : public bounding_tree_node {
   hittable *obj;
 
   virtual __host__ bounding_box get_bounding_box() const override;
+
+  virtual ~bounding_tree_node_object() override {}
 };
 
 struct bounding_tree_node_node : public bounding_tree_node {
@@ -129,6 +133,11 @@ public:
       max[i] = std::max(b1.maximum[i], b2.maximum[i]);
     }
     return bounding_box(min, max);
+  }
+
+  virtual ~bounding_tree_node_node() override {
+    delete left;
+    delete right;
   }
 
   __host__ bounding_tree_node_node(hittable **hittables, int hittables_size,
@@ -623,23 +632,6 @@ inline __host__ int convert_tree_to_array(bounding_tree_node *root,
   }
   // Should definitely not get here
   return -1;
-}
-
-__host__ inline void destruct_tree(bounding_tree_node *root) {
-  if (auto object = dynamic_cast<bounding_tree_node_object *>(root);
-      object != nullptr) {
-    // deletes the tree leaf, but not the hittable it points to.
-    delete object;
-    return;
-  } else if (auto node = dynamic_cast<bounding_tree_node_node *>(root);
-             node != nullptr) {
-    destruct_tree(node->left);
-    destruct_tree(node->right);
-    delete node;
-    return;
-  }
-  // Should definitely not get here
-  return;
 }
 
 #endif
