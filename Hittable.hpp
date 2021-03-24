@@ -625,7 +625,7 @@ inline __host__ int convert_tree_to_array(bounding_tree_node *root,
   return -1;
 }
 
-__host__ void destruct_tree(bounding_tree_node *root) {
+__host__ inline void destruct_tree(bounding_tree_node *root) {
   if (auto object = dynamic_cast<bounding_tree_node_object *>(root);
       object != nullptr) {
     // deletes the tree leaf, but not the hittable it points to.

@@ -9,7 +9,7 @@
 
 using node_ptr = hittable *;
 
-__host__ __device__ bool find_closest_hit(const scene *world, node_ptr* stack, ray &r, num t_min,
+__host__ __device__ inline bool find_closest_hit(const scene *world, node_ptr* stack, ray &r, num t_min,
                                           num t_max, hit_record &hitrec) {
   // Allocate thread-local stack
   node_ptr *stack_ptr = stack;
