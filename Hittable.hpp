@@ -136,8 +136,14 @@ public:
   }
 
   virtual ~bounding_tree_node_node() override {
-    delete left;
-    delete right;
+    if (left != nullptr)
+    {
+      delete left;
+    }
+    if (right != nullptr && right != left)
+    {
+      delete right;
+    }
   }
 
   __host__ bounding_tree_node_node(hittable **hittables, int hittables_size,

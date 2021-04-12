@@ -174,14 +174,11 @@ inline auto loadScene(const toml::value &scene_data) -> scene {
   for (int i = 0; i < world.hittables_size; ++i) {
     hittable_ptrs[i] = world.hittables + i;
   }
-  std::cerr << "Post-toml parse\n";
+
   bounding_tree_node *tree = new bounding_tree_node_node(
       hittable_ptrs, world.hittables_size, state, start, end);
-  std::cerr << "Post-tree-make\n";
   convert_tree_to_array(tree, world.hittables);
-  std::cerr << "Post-tree-conversion\n";
-  //delete tree;
-  std::cerr << "Post-tree-destruct\n";
+  delete tree;
   return world;
 }
 
