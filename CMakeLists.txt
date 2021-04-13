@@ -9,6 +9,7 @@ include(CheckLanguage)
 check_language(CUDA)
 
 find_package(OpenMP REQUIRED)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 add_subdirectory(glm)
 add_subdirectory(toml11)
@@ -41,9 +42,11 @@ target_compile_features(main_cuda
 target_link_libraries(main
   OpenMP::OpenMP_CXX
   glm::glm
-  toml11::toml11)
+  toml11::toml11
+  Eigen3::Eigen)
 
 target_link_libraries(main_cuda
   glm::glm
-  toml11::toml11)
+  toml11::toml11
+  Eigen3::Eigen)
   
