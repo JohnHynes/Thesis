@@ -1,0 +1,66 @@
+[raytracing]
+samples = 100
+depth = 20
+height = 1440
+
+[camera]
+lookfrom = [-0.85, 0.7, 0.85]
+lookat = [0.0, 0.0, -1.0]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+fov = 72.0
+
+#16:9
+aspect_ratio = 1.777777778
+#aspect_ratio = 2.0
+
+[[materials]]
+id = "blue"
+type = "lambertian"
+color = [0.1, 0.1, 0.8]
+
+[[materials]]
+id = "green"
+type = "lambertian"
+color = [0.2, 0.8, 0.2]
+
+[[materials]]
+id = "steel"
+type = "metal"
+color = [0.6, 0.6, 0.6]
+fuzz = 0.01
+
+[[materials]]
+id = "glass"
+type = "dielectric"
+color = [1.0, 1.0, 1.0]
+ir = 1.4
+
+
+[[objects]]
+id = "ground"
+material = "green"
+geometry = "sphere"
+position = [0.0, -1000.5, -1.0]
+radius = 1000.0
+
+[[objects]]
+id = "right"
+material = "steel"
+geometry = "sphere"
+position = [1.01, 0.0, -1.0]
+radius = 0.5
+
+[[objects]]
+id = "middle"
+material = "blue"
+geometry = "sphere"
+position = [0.0, 0.0, -1.0]
+radius = 0.5
+
+[[objects]]
+id = "left"
+material = "glass"
+geometry = "sphere"
+position = [-1.01, 0.0, -1.0]
+radius = 0.5

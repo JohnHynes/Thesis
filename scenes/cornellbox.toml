@@ -1,0 +1,125 @@
+[raytracing]
+samples = 10000
+depth = 20
+height = 720
+
+[camera]
+lookfrom = [0.0, 0.0, 1.0]
+lookat = [0.0, 0.0, -1.0]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+fov = 72.0
+
+#16:9
+#aspect_ratio = 1.777777778
+aspect_ratio = 1.0
+
+[[materials]]
+id = "red"
+type = "lambertian"
+color = [0.65, 0.05, 0.05]
+
+[[materials]]
+id = "white"
+type = "lambertian"
+color = [0.73, 0.73, 0.73]
+
+[[materials]]
+id = "green"
+type = "lambertian"
+color = [0.12, 0.45, 0.15]
+
+[[materials]]
+id = "light"
+type = "emissive"
+color = [1.0, 1.0, 1.0]
+intensity = 4.0
+
+
+[[materials]]
+id = "blue"
+type = "lambertian"
+color = [0.12, 0.12, 0.45]
+
+[[materials]]
+id = "glass"
+type = "dielectric"
+color = [1.0, 1.0, 1.0]
+ir = 1.6
+
+[[materials]]
+id = "steel"
+type = "metal"
+color = [0.6, 0.6, 0.6]
+fuzz = 0.1
+
+
+[[objects]]
+id = "ground"
+material = "white"
+geometry = "sphere"
+position = [0.0, -100.5, -1.0]
+radius = 100.0
+
+[[objects]]
+id = "leftwall"
+material = "green"
+geometry = "sphere"
+position = [-100.5, 0.0, 0.0]
+radius = 100.0
+
+[[objects]]
+id = "rightwall"
+material = "red"
+geometry = "sphere"
+position = [100.5, 0.0, 0.0]
+radius = 100.0
+
+[[objects]]
+id = "topceiling"
+material = "white"
+geometry = "sphere"
+position = [0.0, 100.5, 0.0]
+radius = 100.0
+
+[[objects]]
+id = "backwall"
+material = "white"
+geometry = "sphere"
+position = [0.0, 0.0, -100.5]
+radius = 100.0
+
+[[objects]]
+id = "behindcamerawall"
+material = "white"
+geometry = "sphere"
+position = [0.0, 0.0, 101.5]
+radius = 100.0
+
+[[objects]]
+id = "toplight"
+material = "light"
+geometry = "sphere"
+position = [0.0, 1.485, 0.0]
+radius = 1.0
+
+[[objects]]
+id = "bluesphere"
+material = "blue"
+geometry = "sphere"
+position = [-0.25, -0.25, -0.25]
+radius = 0.25
+
+[[objects]]
+id = "steelsphere"
+material = "steel"
+geometry = "sphere"
+position = [0.3, -0.3, -0.3]
+radius = 0.2
+
+[[objects]]
+id = "glasssphere"
+material = "glass"
+geometry = "sphere"
+position = [0.20, 0.2, -0.1]
+radius = 0.1
