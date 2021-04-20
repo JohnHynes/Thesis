@@ -1,0 +1,1609 @@
+[raytracing]
+samples = 100
+depth = 20
+height = 360
+
+[camera]
+lookfrom = [0.0, 0.0, 1.0]
+lookat = [0.0, 0.0, -0.5]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+fov = 72.0
+background_color = [0.7, 0.7, 0.9]
+
+#16:9
+#aspect_ratio = 1.777777778
+aspect_ratio = 1.0
+
+[[materials]]
+id = "lightgray"
+type = "lambertian"
+color = [0.6, 0.6, 0.6]
+
+[[materials]]
+id = "lightblue"
+type = "lambertian"
+color = [0.1, 0.1, 0.8]
+
+[[materials]]
+id = "purple"
+type = "lambertian"
+color = [0.8, 0.1, 0.8]
+
+[[materials]]
+id = "emissiveblue"
+type = "emissive"
+color = [0.5, 0.5, 0.8]
+intensity = 5.0
+
+[[materials]]
+id = "blue"
+type = "lambertian"
+color = [0.2, 0.2, 0.8]
+
+[[objects]]
+id = "floor"
+material = "lightgray"
+geometry = "plane"
+position = [0.0, -0.5, 0.0]
+normal = [0.0, 1.0, 0.0]
+
+[[objects]]
+id = "roof"
+material = "lightgray"
+geometry = "plane"
+position = [0.0, 0.5, 0.0]
+normal = [0.0, -1.0, 0.0]
+
+[[objects]]
+id = "leftwall"
+material = "lightblue"
+geometry = "plane"
+position = [-0.5, 0.0, 0.0]
+normal = [1.0, 0.0, 0.0]
+
+[[objects]]
+id = "rightwall"
+material = "purple"
+geometry = "plane"
+position = [0.5, 0.0, 0.0]
+normal = [-1.0, 0.0, 0.0]
+
+[[objects]]
+id = "forwardwall"
+material = "lightgray"
+geometry = "plane"
+position = [0.0, 0.0, -0.5]
+normal = [0.0, 0.0, 1.0]
+
+[[objects]]
+id = "behindwall"
+material = "lightgray"
+geometry = "plane"
+position = [0.0, 0.0, 1.5]
+normal = [0.0, 0.0, -1.0]
+
+[[objects]]
+id = "light"
+material = "emissiveblue"
+geometry = "sphere"
+position = [0.0, 2.496, -0.2]
+radius = 2.0
+
+
+
+
+
+
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.10, 0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.06, 0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [-0.02, 0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.02, 0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.06, 0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.10, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, -0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.02, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.06, 0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, -0.10]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, -0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, -0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, 0.02]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, 0.06]
+radius = 0.02
+
+[[objects]]
+id = "blueball"
+material = "blue"
+geometry = "sphere"
+position = [0.10, 0.10, 0.10]
+radius = 0.02

@@ -1,0 +1,44 @@
+[raytracing]
+samples = 100
+depth = 10
+height = 720
+
+[camera]
+lookfrom = [0.0, 0.15, 2.0]
+lookat = [0.0, 0.0, -1.0]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+fov = 72.0
+
+#16:9
+#aspect_ratio = 1.777777778
+aspect_ratio = 2.0
+
+background_color = [0.3, 0.5, 0.8]
+
+[[materials]]
+id = "blue"
+type = "emissive"
+color = [0.1, 0.1, 0.8]
+intensity = 3.0
+
+[[materials]]
+id = "ground"
+type = "lambertian"
+color = [0.2, 0.8, 0.2]
+
+[[objects]]
+id = "ground"
+material = "ground"
+geometry = "plane"
+position = [0.0, -0.5, -1.0]
+normal = [0.0, 1.0, 0.0]
+
+[[objects]]
+id = "tri"
+material = "blue"
+geometry = "triangle"
+p1 = [0.0, -0.5, 0.0]
+p2 = [-0.5, 0.25, 0.5]
+p3 = [0.5, 0.25, 0.5]
+

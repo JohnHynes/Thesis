@@ -1,0 +1,255 @@
+[raytracing]
+samples = 1000
+depth = 50
+height = 1440
+
+[camera]
+lookfrom = [0.0, 0.5, 0.3]
+lookat = [0.0, 0.25, -1.0]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+#fov = 90.0
+fov = 72.0
+
+#16:9
+aspect_ratio = 1.777777778
+#aspect_ratio = 2.0
+
+background_color = [0.3, 0.5, 0.7]
+
+[[materials]]
+id = "red"
+type = "lambertian"
+color = [0.8, 0.1, 0.1]
+
+[[materials]]
+id = "blue"
+type = "lambertian"
+color = [0.1, 0.1, 0.8]
+
+[[materials]]
+id = "yellow"
+type = "lambertian"
+color = [0.8, 0.8, 0.1]
+
+[[materials]]
+id = "orange"
+type = "lambertian"
+color = [0.8, 0.6, 0.1]
+
+[[materials]]
+id = "green"
+type = "lambertian"
+color = [0.2, 0.8, 0.2]
+
+[[materials]]
+id = "green2"
+type = "lambertian"
+color = [0.1, 0.9, 0.1]
+
+[[materials]]
+id = "purple"
+type = "lambertian"
+color = [0.8, 0.1, 0.8]
+
+[[materials]]
+id = "violet"
+type = "lambertian"
+color = [0.5, 0.0, 0.8]
+
+
+[[materials]]
+id = "steel"
+type = "metal"
+color = [0.6, 0.6, 0.6]
+fuzz = 0.1
+
+[[materials]]
+id = "glass"
+type = "dielectric"
+color = [0.99, 0.99, 0.99]
+ir = 1.2
+
+[[materials]]
+id = "denseglass"
+type = "dielectric"
+color = [0.9, 0.9, 0.9]
+ir = 1.8
+
+
+[[objects]]
+id = "ground"
+material = "green"
+geometry = "sphere"
+position = [0.0, -1000.5, -1.0]
+radius = 1000.0
+
+[[objects]]
+id = "lam1"
+material = "red"
+geometry = "sphere"
+position = [-1.5, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "lam2"
+material = "orange"
+geometry = "sphere"
+position = [-1.0, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "lam3"
+material = "yellow"
+geometry = "sphere"
+position = [-0.5, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "lam3"
+material = "green2"
+geometry = "sphere"
+position = [0.0, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "blue"
+material = "blue"
+geometry = "sphere"
+position = [0.5, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "purple"
+material = "purple"
+geometry = "sphere"
+position = [1.0, -0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "violet"
+material = "violet"
+geometry = "sphere"
+position = [1.5, -0.25, -2.0]
+radius = 0.25
+
+
+
+[[objects]]
+id = "glass"
+material = "glass"
+geometry = "sphere"
+position = [0.0, 0.0, -2.3]
+radius = -1.99
+
+[[objects]]
+id = "glass2"
+material = "glass"
+geometry = "sphere"
+position = [0.0, 0.0, -2.3]
+radius = 2.0
+
+
+
+
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [-1.5, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [-1.0, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [-0.5, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [0.0, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [0.5, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [1.0, 0.25, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "metal1"
+material = "steel"
+geometry = "sphere"
+position = [1.5, 0.25, -2.0]
+radius = 0.25
+
+
+
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [-1.5, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [-1.0, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [-0.5, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [0.0, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [0.5, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [1.0, 0.75, -2.0]
+radius = 0.25
+
+[[objects]]
+id = "glass1"
+material = "denseglass"
+geometry = "sphere"
+position = [1.5, 0.75, -2.0]
+radius = 0.25
