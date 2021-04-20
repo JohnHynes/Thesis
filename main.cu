@@ -1,3 +1,4 @@
+#include <cuda_device_runtime_api.h>
 #include <fstream>
 #include <iostream>
 
@@ -195,5 +196,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  world.free_device();
+  cudaFree(d_image);
+  cudaFree(d_cam);
   delete[] image;
 }
