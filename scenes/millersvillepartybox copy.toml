@@ -1,0 +1,274 @@
+[raytracing]
+samples = 300
+depth = 20
+height = 720
+
+[camera]
+lookfrom = [0.0, 0.0, 1.0]
+lookat = [0.0, 0.0, -1.0]
+up_vector = [0.0, 1.0, 0.0]
+aperture = 0.01
+fov = 72.0
+background_color = [0.0, 0.0, 0.0]
+aspect_ratio = 1.0
+
+[[materials]]
+id = "purple"
+type = "lambertian"
+color = [0.7, 0.1, 0.8]
+
+[[materials]]
+id = "white"
+type = "lambertian"
+color = [0.9, 0.9, 0.9]
+
+[[materials]]
+id = "lightblue"
+type = "lambertian"
+color = [0.16, 0.8, 0.8]
+
+[[materials]]
+id = "redlight"
+type = "emissive"
+color = [1.0, 0.05, 0.05]
+intensity = 4.0
+
+[[materials]]
+id = "orangelight"
+type = "emissive"
+color = [1.0, 0.1, 0.05]
+intensity = 4.0
+
+[[materials]]
+id = "yellowlight"
+type = "emissive"
+color = [1.0, 1.0, 0.05]
+intensity = 4.0
+
+[[materials]]
+id = "greenlight"
+type = "emissive"
+color = [0.05, 1.0, 0.05]
+intensity = 4.0
+
+[[materials]]
+id = "bluelight"
+type = "emissive"
+color = [0.05, 0.05, 1.0]
+intensity = 4.0
+
+[[materials]]
+id = "purplelight"
+type = "emissive"
+color = [1.0, 0.05, 1.0]
+intensity = 4.0
+
+[[materials]]
+id = "blue"
+type = "lambertian"
+color = [0.12, 0.12, 0.45]
+
+[[materials]]
+id = "glass1"
+type = "dielectric"
+color = [1.0, 1.0, 1.0]
+ir = 1.6
+
+[[materials]]
+id = "diamond"
+type = "metal"
+color = [0.05, 1.0, 1.0]
+fuzz = 0.2
+
+[[materials]]
+id = "steel"
+type = "metal"
+color = [0.6, 0.6, 0.6]
+fuzz = 0.02
+
+
+[[objects]]
+id = "ground"
+material = "white"
+geometry = "plane"
+position = [0.0, -0.5, -1.0]
+normal = [0.0, 1.0, 0.0]
+
+[[objects]]
+id = "leftwall"
+material = "lightblue"
+geometry = "plane"
+position = [-0.5, 0.0, 0.0]
+normal = [1.0, 0.0, 0.0]
+
+[[objects]]
+id = "rightwall"
+material = "purple"
+geometry = "plane"
+position = [0.5, 0.0, 0.0]
+normal = [-1.0, 0.0, 0.0]
+
+[[objects]]
+id = "topceiling"
+material = "white"
+geometry = "plane"
+position = [0.0, 0.5, 0.0]
+normal = [0.0, -1.0, 0.0]
+
+[[objects]]
+id = "backwall"
+material = "white"
+geometry = "plane"
+position = [0.0, 0.0, -0.5]
+normal = [0.0, 0.0, 1.0]
+
+[[objects]]
+id = "behindcamerawall"
+material = "white"
+geometry = "plane"
+position = [0.0, 0.0, 1.0]
+normal = [0.0, 0.0, -1.0]
+
+[[objects]]
+id = "bluesphere"
+material = "blue"
+geometry = "sphere"
+position = [-0.25, -0.25, -0.25]
+radius = 0.25
+
+[[objects]]
+id = "steelsphere"
+material = "steel"
+geometry = "sphere"
+position = [0.3, -0.3, -0.3]
+radius = 0.2
+
+[[objects]]
+id = "glasssphere1"
+material = "glass1"
+geometry = "sphere"
+position = [0.20, 0.2, -0.1]
+radius = 0.1
+
+[[objects]]
+id = "glasssphere2"
+material = "glass1"
+geometry = "sphere"
+position = [0.10, 0.1, -0.2]
+radius = 0.05
+
+[[objects]]
+id = "glasssphere3"
+material = "glass1"
+geometry = "sphere"
+position = [0.17, 0.04, -0.2]
+radius = 0.03
+
+[[objects]]
+id = "glasspyramid1"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.1, -0.25]
+p2 = [-0.35, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.35]
+
+[[objects]]
+id = "glasspyramid2"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.1, -0.25]
+p2 = [-0.15, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.15]
+
+[[objects]]
+id = "glasspyramid3"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.1, -0.25]
+p2 = [-0.35, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.15]
+
+[[objects]]
+id = "glasspyramid4"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.1, -0.25]
+p2 = [-0.15, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.35]
+
+
+[[objects]]
+id = "glasspyramid5"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.3, -0.25]
+p2 = [-0.35, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.35]
+
+[[objects]]
+id = "glasspyramid6"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.3, -0.25]
+p2 = [-0.15, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.15]
+
+[[objects]]
+id = "glasspyramid7"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.3, -0.25]
+p2 = [-0.35, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.15]
+
+[[objects]]
+id = "glasspyramid8"
+material = "diamond"
+geometry = "triangle"
+p1 = [-0.25, 0.3, -0.25]
+p2 = [-0.15, 0.2, -0.25]
+p3 = [-0.25, 0.2, -0.35]
+
+
+
+[[objects]]
+id = "redlight"
+material = "redlight"
+geometry = "sphere"
+position = [-0.3, 1.495, -0.2]
+radius = 1.0
+
+[[objects]]
+id = "orangelight"
+material = "orangelight"
+geometry = "sphere"
+position = [0.0, 1.495, -0.2]
+radius = 1.0
+
+[[objects]]
+id = "yellowlight"
+material = "yellowlight"
+geometry = "sphere"
+position = [0.3, 1.495, -0.2]
+radius = 1.0
+
+[[objects]]
+id = "greenlight"
+material = "greenlight"
+geometry = "sphere"
+position = [0.3, 1.495, 0.1]
+radius = 1.0
+
+[[objects]]
+id = "bluelight"
+material = "bluelight"
+geometry = "sphere"
+position = [0.0, 1.495, 0.1]
+radius = 1.0
+
+[[objects]]
+id = "purplelight"
+material = "purplelight"
+geometry = "sphere"
+position = [-0.3, 1.495, 0.1]
+radius = 1.0

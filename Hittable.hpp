@@ -559,8 +559,6 @@ inline __host__ bounding_tree_node_node::bounding_tree_node_node(
     hittable **hittables, int hittables_size, RandomState *state, int start,
     int end) {
 
-  hittable **temp_hittables = new hittable *[hittables_size];
-  std::copy(hittables, hittables + hittables_size, temp_hittables);
   int range = end - start;
 
   int axis = random_int(state, 0, 2);
@@ -570,39 +568,37 @@ inline __host__ bounding_tree_node_node::bounding_tree_node_node(
 
   if (range == 1) {
     auto o = new bounding_tree_node_object();
-    o->obj = temp_hittables[start];
+    o->obj = hittables[start];
     left = right = o;
   } else if (range == 2) {
-    if (comparator(temp_hittables[start]->get_bounding_box(),
-                   temp_hittables[start + 1]->get_bounding_box())) {
+    if (comparator(hittables[start]->get_bounding_box(),
+                   hittables[start + 1]->get_bounding_box())) {
       auto o1 = new bounding_tree_node_object();
-      o1->obj = temp_hittables[start];
+      o1->obj = hittables[start];
       left = o1;
       auto o2 = new bounding_tree_node_object();
-      o2->obj = temp_hittables[start + 1];
+      o2->obj = hittables[start + 1];
       right = o2;
     } else {
       auto o1 = new bounding_tree_node_object();
-      o1->obj = temp_hittables[start + 1];
+      o1->obj = hittables[start + 1];
       left = o1;
       auto o2 = new bounding_tree_node_object();
-      o2->obj = temp_hittables[start];
+      o2->obj = hittables[start];
       right = o2;
     }
   } else {
-    std::sort(temp_hittables + start, temp_hittables + end,
+    std::stable_sort(hittables + start, hittables + end,
               [=](auto a, auto b) {
                 return comparator(a->get_bounding_box(), b->get_bounding_box());
               });
 
     int mid = start + range / CONST(2);
-    left = new bounding_tree_node_node(temp_hittables, hittables_size, state,
+    left = new bounding_tree_node_node(hittables, hittables_size, state,
                                        start, mid);
-    right = new bounding_tree_node_node(temp_hittables, hittables_size, state,
+    right = new bounding_tree_node_node(hittables, hittables_size, state,
                                         mid, end);
   }
-
-  delete[] temp_hittables;
 
   bounding_box box_left = left->get_bounding_box();
   bounding_box box_right = right->get_bounding_box();

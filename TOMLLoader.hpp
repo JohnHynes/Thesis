@@ -1,8 +1,10 @@
 #ifndef GPU_RAY_TRACING_TOMLLOADER_HPP_
 #define GPU_RAY_TRACING_TOMLLOADER_HPP_
 
+#include <chrono>
 #include <iostream>
 #include <toml.hpp>
+#include <ctime>
 
 #include <tuple>
 
@@ -102,6 +104,9 @@ inline auto loadScene(const toml::value &scene_data) -> scene {
     case 'e':
       material_map.emplace(id, emissive(c, toml::find<num>(mat, "intensity")));
       break;
+    case 'p':
+      material_map.emplace(id, photoluminous(c, toml::find<num>(mat, "intensity")));
+      break;
     }
   }
 
@@ -170,6 +175,7 @@ inline auto loadScene(const toml::value &scene_data) -> scene {
   int start = world.object_count - 1;
   int end = world.hittables_size;
 
+  // Constructing Tree
   hittable **hittable_ptrs = new hittable *[world.hittables_size];
   for (int i = 0; i < world.hittables_size; ++i) {
     hittable_ptrs[i] = world.hittables + i;
