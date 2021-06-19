@@ -13,3 +13,6 @@ cd build
 cmake ..
 make
 ```
+
+Sample rendering of a "stanford dragon":
+![stanford_dragon](./images/stanford_dragon.png)
